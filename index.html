@@ -1,127 +1,2355 @@
 <!DOCTYPE html>
 <html lang="id" class="scroll-smooth">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-    <meta name="theme-color" content="#065f46">
-    <meta name="description" content="SAMAWA (Sarana Membangun Wawasan Keluarga) — Platform Digital Nasional Bimbingan Perkawinan Calon Pengantin Direktorat Jenderal Bimbingan Masyarakat Islam Kementerian Agama Republik Indonesia.">
-    <title>SAMAWA — Bimbingan Perkawinan Nasional Kementerian Agama RI</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <meta name="theme-color" content="#ffffff" />
+  <meta name="description" content="SAMAWA (Sarana Membangun Wawasan Keluarga) - Platform Resmi Bimbingan Perkawinan Elektronik Calon Pengantin Direktorat Jenderal Bimbingan Masyarakat Islam Kementerian Agama Republik Indonesia Berdasarkan PMA Nomor 30 Tahun 2024 & SK Dirjen Bimas Islam Nomor 4 Tahun 2026." />
+  <title>SAMAWA Nasional — Bimbingan Perkawinan Kementerian Agama Republik Indonesia</title>
 
-    <!-- Tailwind CSS & FontAwesome Icons (Multi-CDN Failover Ready) -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" onerror="this.onerror=null;this.href='https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css';">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Google Fonts: Plus Jakarta Sans, Cinzel, & Amiri -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
-    <!-- Firebase SDK (App, Firestore, Auth) -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
+            serif: ['"Cinzel"', 'Georgia', 'serif'],
+            arabic: ['"Amiri"', 'serif']
+          },
+          boxShadow: {
+            xs: '0 1px 2px 0 rgba(15, 23, 42, 0.04)',
+            soft: '0 4px 20px -2px rgba(15, 23, 42, 0.06)',
+            card: '0 10px 30px -5px rgba(15, 23, 42, 0.07)'
+          }
+        }
+      }
+    };
+  </script>
 
-    <!-- Pustaka Grafik, QR Code, Scanner QR, & Mesin Cetak PDF Presisi -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" onerror="this.onerror=null;this.src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js';"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js';"></script>
-    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js" onerror="this.onerror=null;this.src='https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js';"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js';"></script>
+  <!-- Pustaka Eksternal Resmi (Firebase, Chart.js, QRCode, Html5Qrcode, html2pdf) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-    <style>
-        :root {
-            --emerald-kemenag: #065f46;
-            --emerald-dark: #042f2e;
-            --gold-kemenag: #d97706;
-        }
-        body {
-            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-            background-color: #f8fafc;
-            color: #0f172a;
-            overflow-x: hidden;
-        }
-        .font-arab {
-            font-family: 'Amiri', 'Traditional Arabic', serif;
-            line-height: 2.1;
-        }
-        .glass-card {
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05);
-        }
-        .quiz-option {
-            transition: all 0.18s ease-in-out;
-        }
-        .quiz-option.selected {
-            background-color: #ecfdf5 !important;
-            border-color: #059669 !important;
-            color: #064e3b !important;
-            font-weight: 800 !important;
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.18);
-        }
-        /* Stage Render PDF Presisi Anti-Potong & Anti-Blank Canvas */
-        .pdf-render-stage {
-            position: fixed !important;
-            top: 0 !important;
-            left: 0 !important;
-            z-index: -9999 !important;
-            opacity: 1 !important;
-            pointer-events: none !important;
-            background: #ffffff !important;
-            overflow: visible !important;
-        }
-        /* Scrollbar Halus */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #f1f5f9; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+  <style>
+    /* ==========================================================================
+       STANDAR DESAIN CLEAN ENTERPRISE WHITE UI (ZERO HARSH GREEN GUARANTEE)
+       Audit Forensik Tahap 1 s.d. 61 — 728 Titik Standarisasi Nasional
+       ========================================================================== */
+    :root {
+      --bg-page: #f8fafc;
+      --bg-surface: #ffffff;
+      --bg-subtle: #f1f5f9;
+      --border-light: #e2e8f0;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --accent-emerald: #047857;
+      --accent-emerald-soft: #ecfdf5;
+    }
 
-        @keyframes marqueeSlow {
-            0% { transform: translateX(100%); }
-            100% { transform: translateX(-100%); }
-        }
-        .animate-marquee-nasional {
-            display: inline-block;
-            white-space: nowrap;
-            animation: marqueeSlow 34s linear infinite;
-        }
-        .animate-marquee-nasional:hover {
-            animation-play-state: paused;
-        }
-        @media print {
-            #app-desktop-sidebar, #app-mobile-bottom-nav, header, footer, #toast-notifikasi-modern, #toast-push-notif-apk {
-                display: none !important;
-            }
-            main { margin: 0 !important; padding: 0 !important; }
-        }
-    </style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      overflow-x: hidden;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Scrollbar Halus & Bersih */
+    ::-webkit-scrollbar {
+      width: 7px;
+      height: 7px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
+    /* Transisi & Animasi Halus */
+    .fade-in {
+      animation: fadeInAnim 0.22s ease-out forwards;
+    }
+    @keyframes fadeInAnim {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Indikator Navigasi Sidebar Putih Bersih */
+    .sidebar-nav-btn {
+      transition: all 0.18s ease;
+      color: #334155;
+      background-color: transparent;
+      border: 1px solid transparent;
+    }
+    .sidebar-nav-btn:hover {
+      background-color: #f8fafc;
+      color: #065f46;
+      border-color: #e2e8f0;
+    }
+    .sidebar-nav-btn.active-nav {
+      background-color: #ecfdf5;
+      color: #065f46;
+      border-color: #a7f3d0;
+      font-weight: 800;
+      box-shadow: 0 1px 2px rgba(4, 120, 87, 0.06);
+    }
+
+    /* Kontainer Cetak PDF Tersembunyi yang Aman Render html2canvas */
+    .offscreen-pdf-stage {
+      position: fixed;
+      left: -10000px;
+      top: 0;
+      z-index: -50;
+      background: #ffffff;
+      color: #0f172a;
+      pointer-events: none;
+    }
+
+    /* Aturan Cetak Fisik Browser (Ctrl + P) */
+    @media print {
+      body {
+        background: #ffffff !important;
+        color: #000000 !important;
+      }
+      .no-print,
+      #app-desktop-sidebar,
+      #app-mobile-top-header,
+      #app-mobile-bottom-nav,
+      #banner-pengumuman-global,
+      #toast-notifikasi-modern,
+      #toast-push-notif-apk {
+        display: none !important;
+      }
+      #main-content-wrapper {
+        margin-left: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+      }
+    }
+  </style>
 </head>
-<body class="min-h-screen flex flex-col bg-slate-50 text-slate-800 pb-16 lg:pb-0">
+<body class="bg-slate-50 text-slate-900 antialiased selection:bg-emerald-100 selection:text-emerald-900">
 
-    <!-- OVERLAY PEMELIHARAAN SISTEM NASIONAL (MAINTENANCE MODE) -->
-    <div id="maintenance-overlay" class="fixed inset-0 bg-slate-900/95 z-[90] hidden flex items-center justify-center p-4">
-        <div class="bg-white max-w-md w-full rounded-3xl p-6 sm:p-8 text-center shadow-2xl border-t-4 border-amber-500 space-y-4">
-            <div class="w-16 h-16 mx-auto rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center text-3xl shadow-sm">
-                <i class="fas fa-tools"></i>
+  <!-- ========================================================================
+       1. OVERLAY PEMELIHARAAN SISTEM (PUTIH BERSIH & RESMI)
+       ======================================================================== -->
+  <div id="maintenance-overlay" class="hidden fixed inset-0 z-[999] bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white border border-slate-200 rounded-3xl max-w-md w-full p-6 shadow-2xl text-center space-y-4">
+      <div class="w-16 h-16 rounded-2xl bg-amber-50 border border-amber-200 text-amber-700 flex items-center justify-center mx-auto text-3xl font-extrabold">⚙️</div>
+      <div class="space-y-1">
+        <span class="inline-block px-3 py-1 rounded-full text-[11px] font-extrabold bg-amber-50 text-amber-800 border border-amber-200 uppercase tracking-wider">Pemeliharaan Terjadwal</span>
+        <h2 class="text-lg font-extrabold text-slate-900">Sistem SAMAWA Sedang Dioptimalkan</h2>
+        <p class="text-xs text-slate-600 leading-relaxed">Layanan Bimbingan Perkawinan Elektronik sedang dalam pembaruan berkala oleh Administrator Pusat Ditjen Bimas Islam. Silakan coba beberapa saat lagi atau masuk sebagai Administrator.</p>
+      </div>
+      <div class="pt-2 flex flex-col sm:flex-row gap-2 justify-center">
+        <button onclick="bukaLogin()" class="px-4 py-2.5 rounded-xl text-xs font-extrabold bg-emerald-700 hover:bg-emerald-800 text-white transition cursor-pointer">Login Administrator</button>
+        <button onclick="location.reload()" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 transition cursor-pointer">Muat Ulang Halaman</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       2. TOAST NOTIFIKASI MODERN & PUSH PENGINGAT (PUTIH BERSIH)
+       ======================================================================== -->
+  <div id="toast-notifikasi-modern" class="hidden fixed top-4 right-4 z-[950] max-w-sm w-full bg-white text-slate-800 border border-slate-200 border-l-4 border-l-emerald-600 rounded-2xl shadow-xl p-4 transition-all duration-300 no-print">
+    <div class="flex items-start gap-3">
+      <div id="toast-icon-box" class="w-8 h-8 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 flex items-center justify-center shrink-0 text-sm font-extrabold">✓</div>
+      <div class="flex-1 min-w-0">
+        <p id="toast-title-text" class="text-xs font-extrabold text-slate-900">Informasi Sistem</p>
+        <p id="toast-body-text" class="text-xs text-slate-600 mt-0.5 leading-relaxed break-words">Berhasil diproses.</p>
+      </div>
+      <button onclick="document.getElementById('toast-notifikasi-modern').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 text-sm font-bold px-1 cursor-pointer">✕</button>
+    </div>
+  </div>
+
+  <div id="toast-push-notif-apk" class="hidden fixed bottom-20 lg:bottom-6 right-4 z-[940] max-w-md w-full bg-white text-slate-800 border border-slate-200 border-l-4 border-l-amber-500 rounded-2xl shadow-2xl p-4 no-print">
+    <div class="flex items-start gap-3">
+      <div class="w-9 h-9 rounded-xl bg-amber-50 border border-amber-200 text-amber-700 flex items-center justify-center shrink-0 text-base">🔔</div>
+      <div class="flex-1 min-w-0">
+        <div class="flex items-center justify-between gap-2">
+          <span id="push-notif-pengirim" class="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-md bg-amber-50 text-amber-800 border border-amber-200">Panggilan KUA</span>
+          <span id="push-notif-waktu" class="text-[10px] text-slate-400 font-semibold">Baru saja</span>
+        </div>
+        <h4 id="push-notif-judul" class="text-xs font-extrabold text-slate-900 mt-1">Pengingat Bimbingan Perkawinan</h4>
+        <p id="push-notif-pesan" class="text-xs text-slate-600 mt-0.5 leading-relaxed"></p>
+      </div>
+      <button onclick="tutupToastPushAPK()" class="text-slate-400 hover:text-slate-700 text-xs font-bold px-1.5 py-0.5 rounded-lg hover:bg-slate-100 cursor-pointer">✕</button>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       3. LAYOUT SHELL UTAMA: SIDEBAR KIRI PUTIH BERSIH (DESKTOP) + KONTEN KANAN
+       ======================================================================== -->
+  <div class="min-h-screen flex flex-col lg:flex-row bg-slate-50">
+
+    <!-- SIDEBAR KIRI DESKTOP: 100% PUTIH BERSIH TANPA BACKGROUND HIJAU MENCOLOK -->
+    <aside id="app-desktop-sidebar" class="hidden lg:flex lg:flex-col lg:w-72 lg:fixed lg:inset-y-0 lg:left-0 bg-white border-r border-slate-200 z-40 select-none no-print">
+      <!-- Area Identitas Logo Kemenag di Atas Latar Putih Bersih -->
+      <div class="p-5 border-b border-slate-200 bg-white">
+        <div class="flex items-center gap-3.5">
+          <div class="w-12 h-12 rounded-2xl bg-white border border-slate-200 shadow-xs flex items-center justify-center p-1.5 shrink-0">
+            <img id="sidebar-logo-kemenag" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Kementerian_Agama_new_logo.png/300px-Kementerian_Agama_new_logo.png" alt="Logo Kementerian Agama RI" class="w-full h-full object-contain" onerror="this.style.display='none'" />
+          </div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center gap-1.5">
+              <span class="text-base font-extrabold tracking-tight text-slate-900">SAMAWA</span>
+              <span class="px-2 py-0.5 text-[10px] font-extrabold rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200">RI</span>
             </div>
-            <h2 class="text-xl font-black text-slate-900">Pemeliharaan Terjadwal Sistem SAMAWA Nasional</h2>
-            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                Direktorat Jenderal Bimbingan Masyarakat Islam Kementerian Agama RI sedang melakukan peningkatan kapasitas layanan. Seluruh data progres belajar dan sertifikat Calon Pengantin tersimpan aman di server cloud.
-            </p>
-            <div class="pt-2">
-                <button type="button" onclick="bukaLoginDaruratAdmin()" class="w-full bg-emerald-800 hover:bg-emerald-900 text-white font-extrabold py-2.5 px-4 rounded-xl text-xs shadow-sm transition">
-                    <i class="fas fa-user-shield mr-1 text-amber-300"></i> Akses Login Administrator Kemenag RI
+            <p class="text-[11px] font-bold text-slate-700 truncate leading-tight mt-0.5">Sarana Membangun Wawasan Keluarga</p>
+            <p id="sidebar-sub-instansi" class="text-[10px] font-semibold text-slate-500 truncate mt-0.5">Ditjen Bimas Islam Kemenag RI</p>
+          </div>
+        </div>
+        <!-- Indikator Status Koneksi Real-Time -->
+        <div class="mt-3.5 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px]">
+          <span id="indikator-koneksi-net" class="inline-flex items-center gap-1.5 font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full">
+            <span class="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
+            Sistem Online • Cloud Aktif
+          </span>
+          <span class="text-[10px] font-bold text-slate-400">SK No. 4/2026</span>
+        </div>
+      </div>
+
+      <!-- Kartu Profil Pengguna Saat Login (Di Atas Latar Terang) -->
+      <div id="user-info-nav" class="hidden mx-4 mt-4 p-3.5 rounded-2xl bg-slate-50 border border-slate-200">
+        <div class="flex items-center gap-3">
+          <img id="user-avatar-nav" src="https://ui-avatars.com/api/?name=User&background=ecfdf5&color=065f46&bold=true" alt="Avatar" class="w-10 h-10 rounded-xl object-cover border border-emerald-200 shrink-0 bg-white" />
+          <div class="min-w-0 flex-1">
+            <p id="user-name-nav" class="text-xs font-extrabold text-slate-900 truncate">Nama Pengguna</p>
+            <p id="user-role-nav" class="text-[10px] font-bold text-emerald-800 truncate mt-0.5">Peran Pengguna</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Menu Navigasi Adaptif Sesuai Peran -->
+      <div class="flex-1 overflow-y-auto px-3.5 py-4 space-y-5">
+        <!-- Grup Navigasi Beranda Publik (Tampil Saat Belum Login) -->
+        <div id="sidebar-group-publik" class="space-y-1">
+          <p class="px-3 text-[10px] font-extrabold uppercase tracking-wider text-slate-400 mb-2">Layanan Publik Nasional</p>
+          <a href="#section-hero-publik" class="sidebar-nav-btn active-nav flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold">
+            <span class="text-base">🏛️</span>
+            <span>Beranda Utama SAMAWA</span>
+          </a>
+          <a href="#section-cek-sertifikat" class="sidebar-nav-btn flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold">
+            <span class="text-base">🔍</span>
+            <span>Cek Keaslian Sertifikat</span>
+          </a>
+          <a href="#section-statistik-publik" class="sidebar-nav-btn flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold">
+            <span class="text-base">📊</span>
+            <span>Statistik & IKM Nasional</span>
+          </a>
+          <a href="#section-direktori-kua" class="sidebar-nav-btn flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold">
+            <span class="text-base">🗺️</span>
+            <span>Direktori 5.917 KUA (SK 2026)</span>
+          </a>
+          <button onclick="bukaPanduan()" class="sidebar-nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold text-left cursor-pointer">
+            <span class="text-base">📖</span>
+            <span>Panduan 8 Langkah Bimwin</span>
+          </button>
+          <button onclick="bukaModalKritikSaran()" class="sidebar-nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold text-left cursor-pointer">
+            <span class="text-base">💬</span>
+            <span>Kirim Masukan & Survei IKM</span>
+          </button>
+        </div>
+
+        <!-- Grup Navigasi Ruang Belajar Calon Pengantin (Tampil Saat Login Peserta) -->
+        <div id="sidebar-group-peserta" class="hidden space-y-1">
+          <p class="px-3 text-[10px] font-extrabold uppercase tracking-wider text-slate-400 mb-2">Menu Calon Pengantin</p>
+          <button id="side-btn-peserta-belajar" onclick="gantiTabPeserta('belajar')" class="sidebar-nav-btn active-nav w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold text-left cursor-pointer">
+            <span class="text-base">🎓</span>
+            <span>8 Langkah Ruang Belajar</span>
+          </button>
+          <button id="side-btn-peserta-idcard" onclick="gantiTabPeserta('idcard')" class="sidebar-nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold text-left cursor-pointer">
+            <span class="text-base">🪪</span>
+            <span>ID Card & QR Presensi</span>
+          </button>
+          <button id="side-btn-peserta-unduhan" onclick="gantiTabPeserta('unduhan')" class="sidebar-nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold text-left cursor-pointer">
+            <span class="text-base">📥</span>
+            <span>Pusat Unduhan & Doa</span>
+          </button>
+          <button id="side-btn-peserta-kalkulator" onclick="gantiTabPeserta('kalkulator')" class="sidebar-nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold text-left cursor-pointer">
+            <span class="text-base">🧮</span>
+            <span>Kalkulator Sakinah & 1000 HPK</span>
+          </button>
+          <button id="side-btn-peserta-konsultasi" onclick="gantiTabPeserta('konsultasi')" class="sidebar-nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold text-left cursor-pointer">
+            <span class="text-base">🩺</span>
+            <span>Konsultasi Penyuluh/Penghulu</span>
+          </button>
+          <button id="side-btn-peserta-profil" onclick="gantiTabPeserta('profil')" class="sidebar-nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold text-left cursor-pointer">
+            <span class="text-base">👤</span>
+            <span>Biodata & Rencana Akad</span>
+          </button>
+        </div>
+
+        <!-- Grup Navigasi Fasilitator KUA -->
+        <div id="sidebar-group-fasilitator" class="hidden space-y-1">
+          <p class="px-3 text-[10px] font-extrabold uppercase tracking-wider text-slate-400 mb-2">Panel Fasilitator KUA</p>
+          <button onclick="window.scrollTo({top:0,behavior:'smooth'})" class="sidebar-nav-btn active-nav w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold text-left cursor-pointer">
+            <span class="text-base">✅</span>
+            <span>Verifikasi & Kelulusan Catin</span>
+          </button>
+          <button onclick="bukaModalScanQRFasilitator()" class="sidebar-nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold text-left cursor-pointer">
+            <span class="text-base">📷</span>
+            <span>Scan QR Presensi Catin</span>
+          </button>
+          <button onclick="bukaRegister(event)" class="sidebar-nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold text-left cursor-pointer">
+            <span class="text-base">➕</span>
+            <span>Daftarkan Catin Baru</span>
+          </button>
+          <button onclick="bukaModalProfilFasilitator()" class="sidebar-nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold text-left cursor-pointer">
+            <span class="text-base">👨‍🏫</span>
+            <span>Profil & SK Fasilitator</span>
+          </button>
+        </div>
+
+        <!-- Grup Navigasi Administrator (Pusat / Kanwil / KabKota / KUA) -->
+        <div id="sidebar-group-admin" class="hidden space-y-1">
+          <p class="px-3 text-[10px] font-extrabold uppercase tracking-wider text-slate-400 mb-2">Komando Eksekutif Admin</p>
+          <button onclick="window.scrollTo({top:0,behavior:'smooth'})" class="sidebar-nav-btn active-nav w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold text-left cursor-pointer">
+            <span class="text-base">📈</span>
+            <span>Dasbor & Peta Kepatuhan</span>
+          </button>
+          <button id="side-admin-btn-wilayah" onclick="bukaModalMultiWilayahNasional()" class="sidebar-nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold text-left cursor-pointer">
+            <span class="text-base">🗺️</span>
+            <span>Kelola Wilayah & KUA</span>
+          </button>
+          <button id="side-admin-btn-desa" onclick="bukaModalKelolaDesaKua()" class="hidden sidebar-nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold text-left cursor-pointer">
+            <span class="text-base">🏘️</span>
+            <span>Kelola Desa / Kelurahan</span>
+          </button>
+          <button onclick="bukaRegister(event)" class="sidebar-nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold text-left cursor-pointer">
+            <span class="text-base">➕</span>
+            <span>Daftarkan Catin Baru</span>
+          </button>
+          <button id="side-admin-btn-kredensial" onclick="bukaPanelKredensialAdmin()" class="sidebar-nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold text-left cursor-pointer">
+            <span class="text-base">🔑</span>
+            <span>Kredensial Akun Wilayah</span>
+          </button>
+          <button id="side-admin-btn-fasilitator" onclick="bukaModalManajemenFasilitator()" class="sidebar-nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold text-left cursor-pointer">
+            <span class="text-base">👥</span>
+            <span>Manajemen Fasilitator</span>
+          </button>
+          <button onclick="bukaModalRememberAPKAdmin()" class="sidebar-nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold text-left cursor-pointer">
+            <span class="text-base">📲</span>
+            <span>Push Pengingat ke HP Catin</span>
+          </button>
+          <button id="side-admin-btn-lms" onclick="bukaModalKelolaLMS()" class="sidebar-nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold text-left cursor-pointer">
+            <span class="text-base">📚</span>
+            <span>Editor Modul & Kuis LMS</span>
+          </button>
+          <button id="side-admin-btn-pejabat" onclick="bukaPengaturanPejabat()" class="sidebar-nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold text-left cursor-pointer">
+            <span class="text-base">✒️</span>
+            <span>Pejabat, Kop, & TTD Sertifikat</span>
+          </button>
+          <button id="side-admin-btn-backup" onclick="bukaModalBackupDatabase()" class="sidebar-nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold text-left cursor-pointer">
+            <span class="text-base">💾</span>
+            <span>Backup & Restore Database</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Tombol Aksi Login / Keluar di Bawah Sidebar Putih Bersih -->
+      <div class="p-4 border-t border-slate-200 bg-slate-50/70 space-y-2">
+        <div id="guest-buttons-nav" class="grid grid-cols-2 gap-2">
+          <button onclick="bukaLogin()" class="px-3 py-2.5 rounded-xl text-xs font-extrabold bg-emerald-700 hover:bg-emerald-800 text-white shadow-xs transition cursor-pointer">Masuk Akun</button>
+          <button onclick="bukaRegister(event)" class="px-3 py-2.5 rounded-xl text-xs font-extrabold bg-white hover:bg-slate-100 text-emerald-800 border border-emerald-300 transition cursor-pointer">Daftar Catin</button>
+        </div>
+        <button id="btn-logout-sidebar" onclick="keluarSistem()" class="hidden w-full px-3 py-2.5 rounded-xl text-xs font-extrabold bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 transition flex items-center justify-center gap-2 cursor-pointer">
+          <span>🚪</span>
+          <span>Keluar dari Sesi Akun</span>
+        </button>
+        <div class="pt-1 text-center">
+          <p class="text-[10px] font-semibold text-slate-400">PMA No. 30/2024 • SK Dirjen No. 4/2026</p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ======================================================================
+         4. HEADER ATAS MOBILE & WRAPPER KONTEN UTAMA (PUTIH BERSIH)
+         ====================================================================== -->
+    <div id="main-content-wrapper" class="flex-1 lg:ml-72 flex flex-col min-w-0">
+
+      <!-- HEADER MOBILE & TABLET: PUTIH BERSIH TANPA BACKGROUND HIJAU GELAP -->
+      <header id="app-mobile-top-header" class="lg:hidden sticky top-0 z-30 bg-white/95 backdrop-blur border-b border-slate-200 px-4 py-3 no-print">
+        <div class="flex items-center justify-between gap-2">
+          <div class="flex items-center gap-2.5 min-w-0">
+            <div class="w-9 h-9 rounded-xl bg-white border border-slate-200 p-1 flex items-center justify-center shrink-0">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Kementerian_Agama_new_logo.png/300px-Kementerian_Agama_new_logo.png" alt="Logo Kemenag" class="w-full h-full object-contain" onerror="this.style.display='none'" />
+            </div>
+            <div class="min-w-0">
+              <div class="flex items-center gap-1.5">
+                <span class="text-sm font-extrabold text-slate-900">SAMAWA</span>
+                <span class="px-1.5 py-0.5 text-[9px] font-extrabold rounded bg-emerald-50 text-emerald-800 border border-emerald-200">KEMENAG RI</span>
+              </div>
+              <p id="header-instansi-subtitle" class="text-[10px] font-semibold text-slate-500 truncate">Ditjen Bimas Islam • SK No. 4/2026</p>
+            </div>
+          </div>
+          <div id="mobile-header-auth-actions" class="flex items-center gap-1.5 shrink-0">
+            <button id="btn-mobile-top-login" onclick="bukaLogin()" class="px-3 py-1.5 rounded-xl text-xs font-extrabold bg-emerald-700 text-white cursor-pointer">Masuk</button>
+            <button id="btn-mobile-top-register" onclick="bukaRegister(event)" class="px-2.5 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-800 border border-slate-200 cursor-pointer">Daftar</button>
+            <button id="btn-mobile-top-logout" onclick="keluarSistem()" class="hidden px-2.5 py-1.5 rounded-xl text-xs font-extrabold bg-rose-50 text-rose-700 border border-rose-200 cursor-pointer">Keluar</button>
+          </div>
+        </div>
+      </header>
+
+      <!-- PITA PENGUMUMAN RESMI GLOBAL (PUTIH BERSIH DENGAN AKSEN EMERALD) -->
+      <div id="banner-pengumuman-global" class="bg-white border-b border-slate-200 px-4 lg:px-8 py-2.5 no-print">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2 text-xs">
+          <div class="flex items-center gap-2 min-w-0 flex-1">
+            <span class="px-2 py-0.5 rounded-md text-[10px] font-extrabold bg-emerald-50 text-emerald-800 border border-emerald-200 shrink-0 uppercase">Info Resmi</span>
+            <p id="teks-pengumuman-global" class="font-semibold text-slate-700 truncate">Selamat Datang di Platform Nasional SAMAWA (Sarana Membangun Wawasan Keluarga) — Bimbingan Perkawinan Calon Pengantin Berdasarkan PMA Nomor 30 Tahun 2024 & SK Dirjen Bimas Islam Nomor 4 Tahun 2026.</p>
+          </div>
+          <div class="flex items-center gap-3 shrink-0">
+            <button onclick="bukaPanduan()" class="text-[11px] font-extrabold text-emerald-700 hover:text-emerald-900 underline cursor-pointer">Panduan 8 Langkah</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ====================================================================
+           5. HALAMAN 1: BERANDA PUBLIK NASIONAL (#page-login)
+           ==================================================================== -->
+      <main id="page-login" class="flex-1 px-4 lg:px-8 py-6 space-y-8 max-w-7xl w-full mx-auto fade-in">
+
+        <!-- HERO SECTION: PUTIH BERSIH, ELEGAN, & TEDUH DI MATA -->
+        <section id="section-hero-publik" class="bg-white border border-slate-200 rounded-3xl p-6 lg:p-8 shadow-soft">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            <!-- Kolom Kiri Hero: Informasi Utama & CTA -->
+            <div class="lg:col-span-7 space-y-5">
+              <div class="inline-flex flex-wrap items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs font-extrabold">
+                <span>🏛️ Direktorat Jenderal Bimbingan Masyarakat Islam</span>
+                <span class="text-emerald-400">•</span>
+                <span>38 Provinsi • 514 Kab/Kota • 5.917 KUA</span>
+              </div>
+
+              <div class="space-y-2">
+                <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
+                  SAMAWA — Sarana Membangun Wawasan Keluarga Sakinah
+                </h1>
+                <p class="text-sm sm:text-base text-slate-600 leading-relaxed">
+                  Platform Pembelajaran Mandiri Terpadu (MOOC), Skrining Kesehatan 1000 HPK, Komitmen Bersama Pasangan, dan Penerbitan Sertifikat Bimbingan Perkawinan Elektronik Bervalidasi QR Code Resmi Kementerian Agama Republik Indonesia.
+                </p>
+              </div>
+
+              <!-- Ringkasan 8 Langkah Wajib di Beranda -->
+              <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-2.5">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-extrabold text-slate-800 uppercase tracking-wider">Alur 8 Langkah Standar Nasional (PMA No. 30 Tahun 2024)</span>
+                  <span class="text-[11px] font-bold text-emerald-700">100% Terintegrasi Pasangan</span>
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px] font-bold text-slate-700">
+                  <div class="bg-white border border-slate-200 rounded-xl p-2 flex items-center gap-1.5"><span class="w-5 h-5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center justify-center text-[10px] font-extrabold shrink-0">1</span><span>Tautkan Pasangan</span></div>
+                  <div class="bg-white border border-slate-200 rounded-xl p-2 flex items-center gap-1.5"><span class="w-5 h-5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center justify-center text-[10px] font-extrabold shrink-0">2</span><span>Pretest Awal</span></div>
+                  <div class="bg-white border border-slate-200 rounded-xl p-2 flex items-center gap-1.5"><span class="w-5 h-5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center justify-center text-[10px] font-extrabold shrink-0">3</span><span>5 Modul & Kuis</span></div>
+                  <div class="bg-white border border-slate-200 rounded-xl p-2 flex items-center gap-1.5"><span class="w-5 h-5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center justify-center text-[10px] font-extrabold shrink-0">4</span><span>Postest Akhir</span></div>
+                  <div class="bg-white border border-slate-200 rounded-xl p-2 flex items-center gap-1.5"><span class="w-5 h-5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center justify-center text-[10px] font-extrabold shrink-0">5</span><span>Piagam Kompak</span></div>
+                  <div class="bg-white border border-slate-200 rounded-xl p-2 flex items-center gap-1.5"><span class="w-5 h-5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center justify-center text-[10px] font-extrabold shrink-0">6</span><span>Skrining & Survei</span></div>
+                  <div class="bg-white border border-slate-200 rounded-xl p-2 flex items-center gap-1.5"><span class="w-5 h-5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center justify-center text-[10px] font-extrabold shrink-0">7</span><span>Verifikasi KUA</span></div>
+                  <div class="bg-white border border-slate-200 rounded-xl p-2 flex items-center gap-1.5"><span class="w-5 h-5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center justify-center text-[10px] font-extrabold shrink-0">8</span><span>Unduh 4 Dokumen</span></div>
+                </div>
+              </div>
+
+              <!-- Tombol Aksi Utama -->
+              <div class="flex flex-wrap items-center gap-3 pt-1">
+                <button onclick="bukaRegister(event)" class="px-5 py-3 rounded-2xl text-xs sm:text-sm font-extrabold bg-emerald-700 hover:bg-emerald-800 text-white shadow-sm transition flex items-center gap-2 cursor-pointer">
+                  <span>📝 Daftar Mandiri Calon Pengantin</span>
                 </button>
+                <button onclick="bukaLogin()" class="px-5 py-3 rounded-2xl text-xs sm:text-sm font-extrabold bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 transition flex items-center gap-2 cursor-pointer">
+                  <span>🔐 Masuk Ruang Belajar / Panel KUA</span>
+                </button>
+                <button onclick="bukaPanduan()" class="px-4 py-3 rounded-2xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 transition cursor-pointer">
+                  <span>📖 Baca Panduan</span>
+                </button>
+              </div>
             </div>
+
+            <!-- Kolom Kanan Hero: Kartu Login Cepat & Verifikasi Sertifikat -->
+            <div id="section-cek-sertifikat" class="lg:col-span-5 space-y-4">
+              <!-- Kartu Verifikasi Keaslian Sertifikat / Piagam -->
+              <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5 space-y-3.5">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <span class="w-8 h-8 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 flex items-center justify-center text-sm font-bold">🔍</span>
+                    <div>
+                      <h2 class="text-sm font-extrabold text-slate-900">Verifikasi Keaslian Sertifikat & Piagam</h2>
+                      <p class="text-[11px] text-slate-500">Validasi Nomor Registrasi SAMAWA / QR Code KUA</p>
+                    </div>
+                  </div>
+                  <span class="px-2 py-0.5 text-[10px] font-extrabold rounded bg-white border border-slate-200 text-slate-600">Real-Time</span>
+                </div>
+
+                <div class="flex gap-2">
+                  <input id="input-cek-sertifikat-publik" type="text" placeholder="Ketik Nomor Sertifikat / Username / NIK..." onkeydown="if(event.key==='Enter'){event.preventDefault();cekValiditasSertifikatPublik();}" class="flex-1 px-3.5 py-2.5 rounded-xl text-xs font-semibold bg-white border border-slate-300 focus:outline-none focus:border-emerald-600 text-slate-900" />
+                  <button onclick="cekValiditasSertifikatPublik()" class="px-4 py-2.5 rounded-xl text-xs font-extrabold bg-emerald-700 hover:bg-emerald-800 text-white shrink-0 transition cursor-pointer">Cek Validasi</button>
+                </div>
+
+                <!-- Hasil Verifikasi Sertifikat Publik -->
+                <div id="box-hasil-cek-publik" class="hidden p-3.5 rounded-xl bg-white border border-slate-200 text-xs space-y-1.5"></div>
+              </div>
+
+              <!-- Kartu Ringkas Dasar Hukum Terbaru (SK Dirjen No. 4 Tahun 2026) -->
+              <div class="bg-white border border-slate-200 rounded-2xl p-4 space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-[11px] font-extrabold uppercase tracking-wider text-emerald-800">Landasan Regulasi Nasional Terbaru</span>
+                  <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">Berlaku 2026</span>
+                </div>
+                <ul class="text-[11px] text-slate-600 space-y-1 leading-relaxed">
+                  <li>• <strong>UU Nomor 16 Tahun 2019</strong> tentang Perubahan atas UU No. 1/1974 (Batas Usia 19 Tahun).</li>
+                  <li>• <strong>PMA Nomor 24 Tahun 2024</strong> tentang Organisasi & Tata Kerja KUA Kecamatan.</li>
+                  <li>• <strong>PMA Nomor 30 Tahun 2024</strong> tentang Pencatatan Pernikahan.</li>
+                  <li>• <strong>KMA Nomor 478 & 748 Tahun 2025</strong> tentang PNBP Layanan Nikah & Tipologi KUA.</li>
+                  <li>• <strong>SK Dirjen Bimas Islam Nomor 4 Tahun 2026</strong> tentang Tipologi 5.917 KUA (A, B, C, D1, D2).</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================================================================
+             SECTION STATISTIK & INDEKS KEPUASAN MASYARAKAT (IKM) PUBLIK
+             ================================================================== -->
+        <section id="section-statistik-publik" class="bg-white border border-slate-200 rounded-3xl p-6 lg:p-8 shadow-soft space-y-6">
+          <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-200 pb-4">
+            <div>
+              <span class="text-[11px] font-extrabold uppercase tracking-wider text-emerald-700">Transparansi Layanan Publik</span>
+              <h2 class="text-xl font-extrabold text-slate-900 mt-0.5">Statistik Nasional Pelaksanaan Bimbingan Perkawinan</h2>
+              <p id="badge-cakupan-statistik-publik" class="text-xs text-slate-500 mt-0.5">Menampilkan Data Nasional: Seluruh Indonesia (38 Provinsi • 514 Kab/Kota • 5.917 KUA)</p>
+            </div>
+
+            <!-- Filter Wilayah Statistik Publik (38 Provinsi -> 514 Kab/Kota) -->
+            <div class="flex flex-wrap items-center gap-2">
+              <select id="filter-publik-provinsi" onchange="sinkronDropdownPublikKabupaten()" class="px-3 py-2 rounded-xl text-xs font-bold bg-slate-50 border border-slate-300 text-slate-800 focus:outline-none focus:border-emerald-600">
+                <option value="Semua">Semua Provinsi (38 Provinsi)</option>
+              </select>
+              <select id="filter-publik-kabupaten" onchange="terapkanFilterStatistikPublik()" class="px-3 py-2 rounded-xl text-xs font-bold bg-slate-50 border border-slate-300 text-slate-800 focus:outline-none focus:border-emerald-600">
+                <option value="Semua">Semua Kabupaten/Kota</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- 5 Kartu Metrik Utama Publik (Putih Bersih) -->
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5">
+            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4">
+              <p class="text-[11px] font-bold text-slate-500">Total Catin Terdaftar</p>
+              <p id="pub-stat-total" class="text-2xl font-extrabold text-slate-900 mt-1">0</p>
+              <span class="text-[10px] font-semibold text-emerald-700">Peserta Nasional</span>
+            </div>
+            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4">
+              <p class="text-[11px] font-bold text-slate-500">Catin Pria (Suami)</p>
+              <p id="pub-stat-pria" class="text-2xl font-extrabold text-slate-900 mt-1">0</p>
+              <span class="text-[10px] font-semibold text-sky-700">Calon Suami</span>
+            </div>
+            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4">
+              <p class="text-[11px] font-bold text-slate-500">Catin Wanita (Istri)</p>
+              <p id="pub-stat-wanita" class="text-2xl font-extrabold text-slate-900 mt-1">0</p>
+              <span class="text-[10px] font-semibold text-rose-700">Calon Istri</span>
+            </div>
+            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4">
+              <p class="text-[11px] font-bold text-slate-500">Pasangan Terhubung</p>
+              <p id="pub-stat-pasangan" class="text-2xl font-extrabold text-slate-900 mt-1">0</p>
+              <span class="text-[10px] font-semibold text-teal-700">Sinkronisasi 2 Arah</span>
+            </div>
+            <div class="col-span-2 sm:col-span-1 bg-emerald-50/60 border border-emerald-200 rounded-2xl p-4">
+              <p class="text-[11px] font-bold text-emerald-900">Lulus & Bersertifikat</p>
+              <p id="pub-stat-lulus" class="text-2xl font-extrabold text-emerald-800 mt-1">0</p>
+              <span class="text-[10px] font-bold text-emerald-700">Terverifikasi KUA ✓</span>
+            </div>
+          </div>
+
+          <!-- Grafik Statistik Publik & Ringkasan Survei IKM -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            <div class="lg:col-span-8 bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-3">
+              <div class="flex items-center justify-between">
+                <h3 class="text-xs font-extrabold text-slate-800 uppercase tracking-wider">Sebaran Pendaftar & Kelulusan Wilayah</h3>
+                <span class="text-[11px] font-semibold text-slate-500">Real-Time Cloud</span>
+              </div>
+              <div class="h-64 w-full relative">
+                <canvas id="chart-publik-kua"></canvas>
+              </div>
+            </div>
+
+            <!-- Kartu Indeks Kepuasan Masyarakat (IKM) -->
+            <div class="lg:col-span-4 bg-slate-50 border border-slate-200 rounded-2xl p-5 space-y-4">
+              <div class="flex items-center justify-between border-b border-slate-200 pb-3">
+                <div>
+                  <span class="text-[10px] font-extrabold uppercase tracking-wider text-amber-700">Survei Pelayanan KUA</span>
+                  <h3 class="text-sm font-extrabold text-slate-900">Indeks Kepuasan Masyarakat</h3>
+                </div>
+                <div class="text-right">
+                  <p id="pub-ikm-score" class="text-2xl font-extrabold text-emerald-800">4.9</p>
+                  <p id="pub-ikm-stars" class="text-xs text-amber-500 font-bold">★★★★★</p>
+                </div>
+              </div>
+              <p class="text-xs text-slate-600 leading-relaxed">Berdasarkan penilaian langsung Calon Pengantin & masyarakat atas kemudahan bimbingan perkawinan di KUA (<span id="pub-ikm-count" class="font-extrabold text-slate-800">0</span> responden).</p>
+              <div id="list-ulasan-publik-terbaru" class="space-y-2 max-h-36 overflow-y-auto pr-1 text-xs"></div>
+              <button onclick="bukaModalKritikSaran()" class="w-full py-2.5 px-4 rounded-xl text-xs font-extrabold bg-white hover:bg-slate-100 text-emerald-800 border border-emerald-300 transition cursor-pointer">
+                💬 Beri Penilaian & Masukan Layanan
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================================================================
+             SECTION DIREKTORI 5.917 KUA SE-INDONESIA (SK DIRJEN NO. 4 TAHUN 2026)
+             ================================================================== -->
+        <section id="section-direktori-kua" class="bg-white border border-slate-200 rounded-3xl p-6 lg:p-8 shadow-soft space-y-5">
+          <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-200 pb-4">
+            <div>
+              <div class="inline-flex items-center gap-2">
+                <span class="text-[11px] font-extrabold uppercase tracking-wider text-emerald-700">Direktori Resmi KUA Kecamatan</span>
+                <span class="px-2 py-0.5 rounded text-[10px] font-extrabold bg-emerald-50 text-emerald-800 border border-emerald-200">SK Dirjen Bimas Islam No. 4 Tahun 2026</span>
+              </div>
+              <h2 class="text-xl font-extrabold text-slate-900 mt-0.5">Pencarian Unit Layanan KUA & Tipologi (38 Provinsi • 5.917 KUA)</h2>
+              <p class="text-xs text-slate-500 mt-0.5">Pilih Provinsi, Kabupaten/Kota, atau ketik nama Kecamatan untuk mendaftar langsung di KUA tujuan akad nikah Anda.</p>
+            </div>
+
+            <!-- Filter Direktori KUA Publik -->
+            <div class="flex flex-wrap items-center gap-2">
+              <select id="dir-filter-provinsi" onchange="sinkronFilterDirektoriPublik('prov')" class="px-3 py-2 rounded-xl text-xs font-bold bg-slate-50 border border-slate-300 text-slate-800 focus:outline-none focus:border-emerald-600">
+                <option value="Semua">Semua Provinsi (38 Provinsi)</option>
+              </select>
+              <select id="dir-filter-kabupaten" onchange="sinkronFilterDirektoriPublik('kab')" class="px-3 py-2 rounded-xl text-xs font-bold bg-slate-50 border border-slate-300 text-slate-800 focus:outline-none focus:border-emerald-600">
+                <option value="Semua">Semua Kabupaten/Kota</option>
+              </select>
+              <div class="relative flex items-center">
+                <input id="cari-direktori-kua" type="text" oninput="renderDirektori16Kua()" onkeydown="if(event.key==='Enter')event.preventDefault();" placeholder="Cari nama KUA / Kecamatan..." class="w-48 sm:w-56 px-3.5 py-2 rounded-xl text-xs font-semibold bg-white border border-slate-300 text-slate-900 focus:outline-none focus:border-emerald-600" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Info Keterangan Tipologi KUA Berdasarkan SK No. 4 Tahun 2026 -->
+          <div class="flex flex-wrap items-center justify-between gap-2 bg-slate-50 border border-slate-200 rounded-2xl px-4 py-2.5 text-[11px]">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="font-extrabold text-slate-700">Klasifikasi Tipologi KUA (SK No. 4/2026):</span>
+              <span class="px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200 font-bold">Tipologi A (>100 Nikah/Bln)</span>
+              <span class="px-2 py-0.5 rounded bg-teal-50 text-teal-800 border border-teal-200 font-bold">Tipologi B (50–100 Nikah/Bln)</span>
+              <span class="px-2 py-0.5 rounded bg-sky-50 text-sky-800 border border-sky-200 font-bold">Tipologi C (<50 Nikah/Bln)</span>
+              <span class="px-2 py-0.5 rounded bg-amber-50 text-amber-800 border border-amber-200 font-bold">Tipologi D1 (Pedalaman/Perbatasan)</span>
+              <span class="px-2 py-0.5 rounded bg-indigo-50 text-indigo-800 border border-indigo-200 font-bold">Tipologi D2 (Kepulauan/Terluar)</span>
+            </div>
+            <span id="info-jumlah-direktori-tampil" class="font-extrabold text-slate-600">Memuat KUA...</span>
+          </div>
+
+          <!-- Grid Kartu Direktori KUA -->
+          <div id="grid-direktori-16kua" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5"></div>
+        </section>
+
+      </main>
+      <!-- ====================================================================
+           6. HALAMAN 2: RUANG KERJA CALON PENGANTIN (#page-peserta)
+           ==================================================================== -->
+      <section id="page-peserta" class="hidden flex-1 px-4 lg:px-8 py-6 space-y-6 max-w-7xl w-full mx-auto fade-in">
+
+        <!-- Banner Ringkas Status Peserta (Putih Bersih Beraksen Emerald) -->
+        <div class="bg-white border border-slate-200 border-l-4 border-l-emerald-600 rounded-3xl p-5 lg:p-6 shadow-soft flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div class="space-y-1.5">
+            <div class="flex flex-wrap items-center gap-2">
+              <span id="badge-nomor-langkah-aktif" class="px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-emerald-50 text-emerald-800 border border-emerald-200">LANGKAH 1 / 8</span>
+              <span id="peserta-kua-badge" class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-slate-100 text-slate-700 border border-slate-200">KUA Kecamatan</span>
+              <span id="peserta-tipologi-badge" class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-sky-50 text-sky-800 border border-sky-200">Tipologi KUA (SK No. 4/2026)</span>
+            </div>
+            <h1 class="text-xl sm:text-2xl font-extrabold text-slate-900">Ruang Belajar Mandiri Calon Pengantin (SAMAWA)</h1>
+            <p id="instruksi-langkah-berikutnya" class="text-xs sm:text-sm text-slate-600 leading-relaxed">Ikuti 8 langkah bimbingan perkawinan secara berurutan hingga seluruh dokumen kelulusan siap diunduh.</p>
+          </div>
+
+          <!-- Progress Bar & Skor Rata-Rata -->
+          <div class="flex items-center gap-4 bg-slate-50 border border-slate-200 rounded-2xl p-3.5 shrink-0">
+            <div class="min-w-[140px] space-y-1.5">
+              <div class="flex items-center justify-between text-xs font-extrabold">
+                <span class="text-slate-600">Progres Bimwin</span>
+                <span id="progress-persen-teks" class="text-emerald-800">0%</span>
+              </div>
+              <div class="w-full h-2.5 bg-slate-200 rounded-full overflow-hidden">
+                <div id="progress-bar" class="h-full bg-emerald-600 rounded-full transition-all duration-500" style="width: 0%"></div>
+              </div>
+            </div>
+            <div class="pl-4 border-l border-slate-200 text-center">
+              <p class="text-[10px] font-bold uppercase text-slate-400">Rata-Rata Kuis</p>
+              <p id="nilai-rata-rata" class="text-xl font-extrabold text-emerald-800">0</p>
+            </div>
+          </div>
         </div>
+
+        <!-- Bar Navigasi Tab Ruang Kerja Peserta (Desktop & Tablet) -->
+        <div class="bg-white border border-slate-200 rounded-2xl p-1.5 flex flex-wrap gap-1.5 shadow-xs no-print">
+          <button id="tab-btn-belajar" onclick="gantiTabPeserta('belajar')" class="px-3.5 py-2 rounded-xl text-xs font-extrabold bg-emerald-50 text-emerald-900 border border-emerald-200 transition cursor-pointer">🎓 1. Ruang Belajar (8 Langkah)</button>
+          <button id="tab-btn-idcard" onclick="gantiTabPeserta('idcard')" class="px-3.5 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-50 border border-transparent transition cursor-pointer">🪪 2. ID Card & QR</button>
+          <button id="tab-btn-unduhan" onclick="gantiTabPeserta('unduhan')" class="px-3.5 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-50 border border-transparent transition cursor-pointer">📥 3. Unduhan & Doa</button>
+          <button id="tab-btn-kalkulator" onclick="gantiTabPeserta('kalkulator')" class="px-3.5 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-50 border border-transparent transition cursor-pointer">🧮 4. Kalkulator & 1000 HPK</button>
+          <button id="tab-btn-konsultasi" onclick="gantiTabPeserta('konsultasi')" class="px-3.5 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-50 border border-transparent transition cursor-pointer">🩺 5. Konsultasi KUA</button>
+          <button id="tab-btn-profil" onclick="gantiTabPeserta('profil')" class="px-3.5 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-50 border border-transparent transition cursor-pointer">👤 6. Biodata & Akad</button>
+        </div>
+
+        <!-- ==================================================================
+             TAB 1 PESERTA: 8 LANGKAH PEMBELAJARAN TERPADU (#tab-content-belajar)
+             ================================================================== -->
+        <div id="tab-content-belajar" class="space-y-6">
+
+          <!-- Lencana Prestasi (Gamifikasi Sakinah) -->
+          <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs">
+            <div class="flex items-center justify-between mb-3">
+              <h2 class="text-xs font-extrabold uppercase tracking-wider text-slate-700">🏅 Lencana Capaian Calon Pengantin</h2>
+              <span class="text-[11px] font-semibold text-slate-400">Otomatis terbuka sesuai ketuntasan langkah</span>
+            </div>
+            <div id="badges-prestasi-container" class="grid grid-cols-2 sm:grid-cols-5 gap-2.5"></div>
+          </div>
+
+          <!-- LANGKAH 1: SINKRONISASI PASANGAN & KUIS KECOCOKAN -->
+          <div id="step-card-1" class="bg-white border border-slate-200 rounded-3xl p-5 lg:p-6 shadow-xs space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3.5">
+              <div class="flex items-center gap-3">
+                <span class="w-8 h-8 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 flex items-center justify-center text-xs font-extrabold">01</span>
+                <div>
+                  <h3 class="text-base font-extrabold text-slate-900">Langkah 1: Sinkronisasi Akun Pasangan Calon Pengantin</h3>
+                  <p class="text-xs text-slate-500">Hubungkan akun Calon Suami & Calon Istri untuk Piagam Kompak dan Daftar Hadir berpasangan</p>
+                </div>
+              </div>
+              <span id="status-step-1-badge" class="px-3 py-1 rounded-full text-xs font-extrabold bg-amber-50 text-amber-800 border border-amber-200">Menunggu Sinkronisasi</span>
+            </div>
+
+            <!-- Form Input Tautkan Pasangan (Tampil Jika Belum Terhubung) -->
+            <div id="form-tautkan-pasangan-box" class="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-3">
+              <p class="text-xs text-slate-700 font-semibold leading-relaxed">Ketik <strong>Username</strong>, <strong>16 Digit NIK KTP</strong>, <strong>Nomor WhatsApp</strong>, atau <strong>Email</strong> pasangan Anda (atau buat akun pasangan otomatis jika pasangan belum mendaftar):</p>
+              <div class="flex flex-col sm:flex-row gap-2">
+                <input id="input-username-pasangan-cepat" type="text" placeholder="Ketik Username / NIK 16 Digit / No. WA pasangan..." class="flex-1 px-3.5 py-2.5 rounded-xl text-xs font-semibold bg-white border border-slate-300 text-slate-900 focus:outline-none focus:border-emerald-600" />
+                <button onclick="tautkanAkunPasanganLangsung()" class="px-4 py-2.5 rounded-xl text-xs font-extrabold bg-emerald-700 hover:bg-emerald-800 text-white shrink-0 transition cursor-pointer">🔗 Hubungkan Pasangan</button>
+                <button onclick="bukaModalBuatPasanganOtomatis()" class="px-4 py-2.5 rounded-xl text-xs font-extrabold bg-white hover:bg-slate-100 text-emerald-800 border border-emerald-300 shrink-0 transition cursor-pointer">➕ Buat Akun Pasangan Otomatis</button>
+              </div>
+            </div>
+
+            <!-- Box Info Pasangan Terhubung -->
+            <div id="info-pasangan-terhubung-box" class="hidden bg-emerald-50/60 border border-emerald-200 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div class="space-y-1">
+                <div class="flex items-center gap-2">
+                  <span class="px-2 py-0.5 rounded text-[10px] font-extrabold bg-emerald-700 text-white">TERHUBUNG 2 ARAH ✓</span>
+                  <span id="teks-nama-pasangan-sinkron" class="text-sm font-extrabold text-slate-900">-</span>
+                </div>
+                <p id="teks-progres-pasangan-sinkron" class="text-xs text-slate-600 font-semibold">Memuat progres belajar pasangan...</p>
+              </div>
+              <div class="flex flex-wrap items-center gap-2">
+                <button onclick="bukaKuisKecocokanPasangan()" class="px-3.5 py-2 rounded-xl text-xs font-extrabold bg-white hover:bg-emerald-50 text-emerald-800 border border-emerald-300 transition cursor-pointer">💞 Uji Kecocokan Visi (<span id="skor-kecocokan-pasangan">Belum Diuji</span>)</button>
+                <button id="btn-lepas-pasangan" onclick="putuskanTautanPasangan()" class="px-3 py-2 rounded-xl text-[11px] font-bold bg-white hover:bg-rose-50 text-rose-700 border border-rose-200 transition cursor-pointer">Ganti Pasangan</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- LANGKAH 2: PRETEST AWAL WAWASAN KELUARGA -->
+          <div id="step-card-2" class="bg-white border border-slate-200 rounded-3xl p-5 lg:p-6 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div class="flex items-start gap-3">
+              <span class="w-8 h-8 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 flex items-center justify-center text-xs font-extrabold shrink-0">02</span>
+              <div>
+                <h3 class="text-base font-extrabold text-slate-900">Langkah 2: Pretest (Uji Pengetahuan Awal Catin)</h3>
+                <p class="text-xs text-slate-500 mt-0.5">Kerjakan 5 soal pemetaan awal sebelum mempelajari 5 modul utama Bimbingan Perkawinan.</p>
+                <p id="info-skor-pretest" class="text-xs font-extrabold text-emerald-800 mt-1">Status: Belum Dikerjakan</p>
+              </div>
+            </div>
+            <button id="btn-mulai-pretest" onclick="bukaKuis(0)" class="px-4 py-2.5 rounded-xl text-xs font-extrabold bg-emerald-700 hover:bg-emerald-800 text-white shrink-0 transition cursor-pointer">📝 Mulai Pretest Sekarang</button>
+          </div>
+
+          <!-- LANGKAH 3: 5 MODUL INTI KURIKULUM BIMBINGAN PERKAWINAN (MOOC) -->
+          <div id="step-card-3" class="bg-white border border-slate-200 rounded-3xl p-5 lg:p-6 shadow-xs space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3.5">
+              <div class="flex items-center gap-3">
+                <span class="w-8 h-8 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 flex items-center justify-center text-xs font-extrabold">03</span>
+                <div>
+                  <h3 class="text-base font-extrabold text-slate-900">Langkah 3: 5 Modul Kurikulum Nasional Bimbingan Perkawinan</h3>
+                  <p class="text-xs text-slate-500">Pelajari Materi PDF (Dilengkapi Suara TTS), Video Interaktif, dan lulus Kuis tiap modul (Skor minimal 60)</p>
+                </div>
+              </div>
+              <span id="status-step-3-badge" class="px-3 py-1 rounded-full text-xs font-extrabold bg-slate-100 text-slate-700 border border-slate-200">0 / 5 Modul Tuntas</span>
+            </div>
+
+            <!-- Wadah Render 5 Kartu Modul -->
+            <div id="modul-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+          </div>
+
+          <!-- LANGKAH 4: POSTEST EVALUASI AKHIR -->
+          <div id="step-card-4" class="bg-white border border-slate-200 rounded-3xl p-5 lg:p-6 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div class="flex items-start gap-3">
+              <span class="w-8 h-8 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 flex items-center justify-center text-xs font-extrabold shrink-0">04</span>
+              <div>
+                <h3 class="text-base font-extrabold text-slate-900">Langkah 4: Postest (Evaluasi Akhir Kelulusan MOOC)</h3>
+                <p class="text-xs text-slate-500 mt-0.5">Terbuka otomatis setelah ke-5 Modul selesai dipelajari. Mengukur peningkatan pemahaman Anda.</p>
+                <p id="info-skor-postest" class="text-xs font-extrabold text-slate-600 mt-1">Status: Terkunci (Tuntaskan Modul 1–5)</p>
+              </div>
+            </div>
+            <button id="btn-mulai-postest" onclick="bukaKuis(99)" disabled class="px-4 py-2.5 rounded-xl text-xs font-extrabold bg-slate-200 text-slate-500 shrink-0 transition cursor-not-allowed">🔒 Kerjakan Postest</button>
+          </div>
+
+          <!-- LANGKAH 5: PIAGAM KAMI KOMPAK & REFLEKSI MANDIRI -->
+          <div id="step-card-5" class="bg-white border border-slate-200 rounded-3xl p-5 lg:p-6 shadow-xs space-y-5">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3.5">
+              <div class="flex items-center gap-3">
+                <span class="w-8 h-8 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 flex items-center justify-center text-xs font-extrabold">05</span>
+                <div>
+                  <h3 class="text-base font-extrabold text-slate-900">Langkah 5: Piagam Kesepakatan "Kami Kompak" & Refleksi Keluarga</h3>
+                  <p class="text-xs text-slate-500">Rumuskan komitmen bersama pasangan tentang pembagian peran, keuangan, dan pengasuhan anak</p>
+                </div>
+              </div>
+              <span id="status-step-5-badge" class="px-3 py-1 rounded-full text-xs font-extrabold bg-amber-50 text-amber-800 border border-amber-200">Wajib Diisi</span>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              <div class="space-y-1.5">
+                <label class="block text-xs font-extrabold text-slate-800">1. Kesepakatan Relasi & Pembagian Peran Domestik <span class="text-red-500">*</span></label>
+                <textarea id="kompak-peran" rows="3" maxlength="360" placeholder="Contoh: Saling bekerja sama mengurus rumah tangga dan bermusyawarah dengan santun..." class="w-full px-3.5 py-2.5 rounded-xl text-xs bg-slate-50 border border-slate-300 focus:bg-white focus:outline-none focus:border-emerald-600"></textarea>
+              </div>
+              <div class="space-y-1.5">
+                <label class="block text-xs font-extrabold text-slate-800">2. Kesepakatan Transparansi Keuangan & Nafkah <span class="text-red-500">*</span></label>
+                <textarea id="kompak-keuangan" rows="3" maxlength="360" placeholder="Contoh: Mengelola anggaran bulanan secara terbuka, menabung dana darurat & pendidikan..." class="w-full px-3.5 py-2.5 rounded-xl text-xs bg-slate-50 border border-slate-300 focus:bg-white focus:outline-none focus:border-emerald-600"></textarea>
+              </div>
+              <div class="space-y-1.5">
+                <label class="block text-xs font-extrabold text-slate-800">3. Kesepakatan Pola Asuh & Pencegahan Stunting <span class="text-red-500">*</span></label>
+                <textarea id="kompak-pola-asuh" rows="3" maxlength="360" placeholder="Contoh: Mengawal gizi 1000 HPK, memberikan ASI eksklusif, dan mendidik anak tanpa kekerasan..." class="w-full px-3.5 py-2.5 rounded-xl text-xs bg-slate-50 border border-slate-300 focus:bg-white focus:outline-none focus:border-emerald-600"></textarea>
+              </div>
+            </div>
+
+            <div class="space-y-1.5 pt-2 border-t border-slate-100">
+              <label class="block text-xs font-extrabold text-slate-800">Jurnal Refleksi & Rencana Aksi Keluarga Sakinah <span class="text-red-500">*</span></label>
+              <textarea id="input-refleksi-peserta" rows="2" maxlength="400" placeholder="Tuliskan harapan, doa, dan komitmen pribadi Anda menuju pernikahan yang Sakinah, Mawaddah, wa Rahmah..." class="w-full px-3.5 py-2.5 rounded-xl text-xs bg-slate-50 border border-slate-300 focus:bg-white focus:outline-none focus:border-emerald-600"></textarea>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-between gap-3">
+              <p class="text-[11px] text-slate-500">Data Piagam Kompak tersinkronisasi otomatis ke akun pasangan Anda dan dapat dicetak sebagai Piagam A4.</p>
+              <div class="flex flex-wrap items-center gap-2">
+                <button onclick="simpanPiagamKompakDanRefleksi()" class="px-4 py-2.5 rounded-xl text-xs font-extrabold bg-emerald-700 hover:bg-emerald-800 text-white transition cursor-pointer">💾 Simpan Piagam Kompak & Refleksi</button>
+                <button onclick="cetakPiagamKompakPDF()" class="px-4 py-2.5 rounded-xl text-xs font-extrabold bg-white hover:bg-slate-50 text-emerald-800 border border-emerald-300 transition cursor-pointer">📜 Pratinjau / Unduh Piagam Kompak PDF</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- LANGKAH 6: SKRINING KESEHATAN 1000 HPK & SURVEI KEPUASAN (IKM) -->
+          <div id="step-card-6" class="bg-white border border-slate-200 rounded-3xl p-5 lg:p-6 shadow-xs space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3.5">
+              <div class="flex items-center gap-3">
+                <span class="w-8 h-8 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 flex items-center justify-center text-xs font-extrabold">06</span>
+                <div>
+                  <h3 class="text-base font-extrabold text-slate-900">Langkah 6: Skrining Mandiri Kesehatan 1000 HPK & Survei Layanan KUA</h3>
+                  <p class="text-xs text-slate-500">Lengkapi cek kesehatan reproduksi/stunting dan berikan penilaian kualitas layanan bimbingan KUA</p>
+                </div>
+              </div>
+              <span id="status-step-6-badge" class="px-3 py-1 rounded-full text-xs font-extrabold bg-amber-50 text-amber-800 border border-amber-200">Lengkapi Skrining & Survei</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 flex flex-col justify-between gap-3">
+                <div>
+                  <span class="text-[10px] font-extrabold uppercase tracking-wider text-teal-700">Pencegahan Stunting Kemenag–Kemenkes</span>
+                  <h4 class="text-sm font-extrabold text-slate-900 mt-0.5">Kalkulator IMT, Hb, & LILA (1000 HPK)</h4>
+                  <p id="ringkasan-status-kesehatan-step6" class="text-xs text-slate-600 mt-1">Status: Belum diisi pada menu Kalkulator Kesehatan.</p>
+                </div>
+                <button onclick="gantiTabPeserta('kalkulator')" class="w-full py-2.5 px-3.5 rounded-xl text-xs font-extrabold bg-white hover:bg-teal-50 text-teal-800 border border-teal-300 transition cursor-pointer">🩺 Buka Kalkulator Skrining Kesehatan</button>
+              </div>
+
+              <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 flex flex-col justify-between gap-3">
+                <div>
+                  <span class="text-[10px] font-extrabold uppercase tracking-wider text-amber-700">Indeks Kepuasan Masyarakat (IKM)</span>
+                  <h4 class="text-sm font-extrabold text-slate-900 mt-0.5">Survei Kepuasan Bimbingan Perkawinan KUA</h4>
+                  <p id="ringkasan-status-ikm-step6" class="text-xs text-slate-600 mt-1">Status: Belum mengisi rating kepuasan layanan.</p>
+                </div>
+                <button onclick="bukaModalKritikSaran()" class="w-full py-2.5 px-3.5 rounded-xl text-xs font-extrabold bg-white hover:bg-amber-50 text-amber-900 border border-amber-300 transition cursor-pointer">⭐ Isi Survei Kepuasan Layanan KUA</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- LANGKAH 7: PRESENSI KELAS TATAP MUKA / DARING & VERIFIKASI FASILITATOR KUA -->
+          <div id="step-card-7" class="bg-white border border-slate-200 rounded-3xl p-5 lg:p-6 shadow-xs space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3.5">
+              <div class="flex items-center gap-3">
+                <span class="w-8 h-8 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 flex items-center justify-center text-xs font-extrabold">07</span>
+                <div>
+                  <h3 class="text-base font-extrabold text-slate-900">Langkah 7: Jadwal Sesi Tatap Muka / Daring & Pengesahan Fasilitator KUA</h3>
+                  <p class="text-xs text-slate-500">Pilih jadwal kelas di KUA Anda dan tunjukkan QR ID Card untuk diverifikasi oleh Penghulu/Penyuluh</p>
+                </div>
+              </div>
+              <span id="status-step-7-badge" class="px-3 py-1 rounded-full text-xs font-extrabold bg-amber-50 text-amber-800 border border-amber-200">Menunggu Verifikasi KUA</span>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-2.5">
+                <h4 class="text-xs font-extrabold uppercase tracking-wider text-teal-800">💻 Jadwal Sesi Daring (Zoom / Google Meet KUA)</h4>
+                <div id="list-jadwal-online-peserta" class="space-y-2 text-xs text-slate-600">Memuat jadwal daring KUA...</div>
+              </div>
+              <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-2.5">
+                <h4 class="text-xs font-extrabold uppercase tracking-wider text-emerald-800">🏛️ Jadwal Kelas Tatap Muka Balai Nikah KUA</h4>
+                <div id="list-jadwal-offline-peserta" class="space-y-2 text-xs text-slate-600">Memuat jadwal tatap muka KUA...</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- LANGKAH 8: PANEL KELULUSAN & UNDUH 4 DOKUMEN RESMI -->
+          <div id="panel-selesai" class="bg-white border-2 border-emerald-600 rounded-3xl p-6 lg:p-8 shadow-soft space-y-5">
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-200 pb-4">
+              <div class="space-y-1">
+                <span id="lencana-status-kelulusan-panel8" class="inline-block px-3 py-1 rounded-full text-[11px] font-extrabold bg-amber-50 text-amber-800 border border-amber-200">MENUNGGU SYARAT LENGKAP & VERIFIKASI FASILITATOR KUA</span>
+                <h3 class="text-xl font-extrabold text-slate-900">Langkah 8: Penerbitan Sertifikat & Dokumen Kelulusan Resmi</h3>
+                <p id="teks-status-kelulusan-panel8" class="text-xs text-slate-600 leading-relaxed">Selesaikan seluruh 5 Modul, Postest, Piagam Kompak, dan ikuti sesi verifikasi bersama Fasilitator KUA untuk membuka kunci unduhan Sertifikat Resmi.</p>
+              </div>
+              <div class="text-left lg:text-right shrink-0">
+                <p class="text-[10px] font-bold uppercase text-slate-400">Nomor Registrasi Sertifikat</p>
+                <p id="nomor-sertifikat-peserta-tampil" class="text-xs font-extrabold font-mono text-emerald-800 bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-xl mt-0.5">-</p>
+              </div>
+            </div>
+
+            <!-- 4 Tombol Dokumen Resmi Catin (Putih & Emerald Teduh) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              <button id="btn-unduh-sertifikat-utama" onclick="downloadSertifikatPDF()" class="p-4 rounded-2xl bg-emerald-700 hover:bg-emerald-800 text-white text-left space-y-1 transition shadow-xs cursor-pointer">
+                <span class="text-lg">🎓</span>
+                <p class="text-xs font-extrabold">1. Unduh Sertifikat SAMAWA</p>
+                <p class="text-[10px] text-emerald-100">Format Resmi A4 Landscape Ber-QR</p>
+              </button>
+              <button onclick="cetakPiagamKompakPDF()" class="p-4 rounded-2xl bg-emerald-50 hover:bg-emerald-100 text-emerald-950 border border-emerald-300 text-left space-y-1 transition cursor-pointer">
+                <span class="text-lg">🤝</span>
+                <p class="text-xs font-extrabold">2. Unduh Piagam Kompak</p>
+                <p class="text-[10px] text-emerald-800">Komitmen Pasangan A4 Portrait</p>
+              </button>
+              <button onclick="downloadRaporPortofolioPDF()" class="p-4 rounded-2xl bg-teal-50 hover:bg-teal-100 text-teal-950 border border-teal-300 text-left space-y-1 transition cursor-pointer">
+                <span class="text-lg">📋</span>
+                <p class="text-xs font-extrabold">3. Unduh Rapor Portofolio</p>
+                <p class="text-[10px] text-teal-800">Transkrip Nilai, 1000 HPK & Bukti KUA</p>
+              </button>
+              <button onclick="downloadKartuPasanganIGStory()" class="p-4 rounded-2xl bg-amber-50 hover:bg-amber-100 text-amber-950 border border-amber-300 text-left space-y-1 transition cursor-pointer">
+                <span class="text-lg">✨</span>
+                <p class="text-xs font-extrabold">4. Kartu Digital Story (PNG)</p>
+                <p class="text-[10px] text-amber-800">Kartu Siap Akad Pasangan Sakinah</p>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==================================================================
+             TAB 2 PESERTA: KARTU IDENTITAS (ID CARD) & QR PRESENSI (#tab-content-idcard)
+             ================================================================== -->
+        <div id="tab-content-idcard" class="hidden space-y-6">
+          <div class="bg-white border border-slate-200 rounded-3xl p-6 lg:p-8 shadow-xs">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+              <!-- Pratinjau Kartu Peserta Berlatar Putih Bersih -->
+              <div class="lg:col-span-5 flex justify-center">
+                <div id="kartu-idcard-elemen" class="w-[320px] bg-white border-2 border-slate-300 rounded-3xl overflow-hidden shadow-card text-slate-900">
+                  <div class="bg-emerald-50 border-b-2 border-emerald-700 px-4 py-3.5 flex items-center gap-2.5">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Kementerian_Agama_new_logo.png/300px-Kementerian_Agama_new_logo.png" alt="Logo" class="w-9 h-9 object-contain bg-white rounded-lg p-1 border border-emerald-200 shrink-0" />
+                    <div class="min-w-0">
+                      <p class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-900">Kementerian Agama RI</p>
+                      <h4 class="text-xs font-extrabold text-slate-900 truncate">KARTU PESERTA BIMWIN SAMAWA</h4>
+                      <p id="idcard-kabupaten-header" class="text-[9px] font-bold text-emerald-800 truncate">Ditjen Bimas Islam</p>
+                    </div>
+                  </div>
+                  <div class="p-5 text-center space-y-3">
+                    <img id="idcard-foto" src="https://ui-avatars.com/api/?name=Catin&background=ecfdf5&color=065f46&bold=true" alt="Pasfoto" class="w-20 h-20 rounded-2xl object-cover mx-auto border-2 border-emerald-600 shadow-xs bg-slate-50" />
+                    <div>
+                      <h3 id="idcard-nama" class="text-sm font-extrabold text-slate-900">Nama Calon Pengantin</h3>
+                      <p id="idcard-nik" class="text-[11px] font-mono font-bold text-slate-500 mt-0.5">NIK: -</p>
+                      <span id="idcard-kua" class="inline-block mt-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-50 text-emerald-800 border border-emerald-200">KUA Kecamatan</span>
+                    </div>
+                    <div class="bg-slate-50 border border-slate-200 rounded-2xl p-3 text-left text-[11px] space-y-1">
+                      <div class="flex justify-between"><span class="text-slate-500 font-semibold">Pasangan:</span><span id="idcard-pasangan" class="font-extrabold text-slate-800 truncate max-w-[160px]">-</span></div>
+                      <div class="flex justify-between"><span class="text-slate-500 font-semibold">Rencana Akad:</span><span id="idcard-akad" class="font-extrabold text-slate-800">-</span></div>
+                      <div class="flex justify-between"><span class="text-slate-500 font-semibold">Status MOOC:</span><span id="idcard-status" class="font-extrabold text-emerald-800">Aktif</span></div>
+                    </div>
+                    <div class="pt-1 flex flex-col items-center">
+                      <div id="idcard-qrcode" class="p-2 bg-white border border-slate-200 rounded-xl"></div>
+                      <p id="idcard-kode-reg" class="text-[9px] font-mono font-bold text-slate-500 mt-1.5">SAMAWA-REG</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Opsi Cetak ID Card -->
+              <div class="lg:col-span-7 space-y-4">
+                <span class="px-2.5 py-1 rounded-full text-[11px] font-extrabold bg-emerald-50 text-emerald-800 border border-emerald-200">Presensi Digital Balai Nikah KUA</span>
+                <h2 class="text-xl font-extrabold text-slate-900">Kartu Identitas (ID Card) & QR Code Kehadiran</h2>
+                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">Tunjukkan QR Code pada kartu ini kepada Fasilitator / Petugas KUA saat mengikuti sesi Bimbingan Perkawinan Tatap Muka maupun Daring untuk pencatatan kehadiran otomatis.</p>
+                <div class="flex flex-wrap gap-3 pt-2">
+                  <button onclick="downloadIDCardPDF('a4')" class="px-4 py-3 rounded-2xl text-xs font-extrabold bg-emerald-700 hover:bg-emerald-800 text-white transition cursor-pointer">🖨️ Unduh Lembar ID Card (Kertas A4)</button>
+                  <button onclick="downloadIDCardPDF('cr80')" class="px-4 py-3 rounded-2xl text-xs font-extrabold bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 transition cursor-pointer">🪪 Unduh Ukuran Kartu PVC (CR-80)</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==================================================================
+             TAB 3 PESERTA: PUSAT UNDUHAN MODUL & DOA KELUARGA (#tab-content-unduhan)
+             ================================================================== -->
+        <div id="tab-content-unduhan" class="hidden space-y-6">
+          <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-xs space-y-4">
+            <h2 class="text-lg font-extrabold text-slate-900">📥 Pusat Unduhan Buku Saku & Modul Resmi Kemenag RI</h2>
+            <div id="grid-pusat-unduhan" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-xs space-y-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <h2 class="text-lg font-extrabold text-slate-900">🤲 Untaian Doa Pengantin & Keluarga Sakinah</h2>
+                <p class="text-xs text-slate-500">Dilengkapi teks Arab, Latin, Arti Bahasa Indonesia, dan pemutar suara</p>
+              </div>
+            </div>
+            <div id="container-doa-pengantin" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+          </div>
+        </div>
+
+        <!-- ==================================================================
+             TAB 4 PESERTA: KALKULATOR SAKINAH & SKRINING 1000 HPK (#tab-content-kalkulator)
+             ================================================================== -->
+        <div id="tab-content-kalkulator" class="hidden space-y-6">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Kalkulator Perencanaan Keuangan Keluarga -->
+            <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-xs space-y-4">
+              <div>
+                <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-700">Manajemen Ekonomi Rumah Tangga</span>
+                <h3 class="text-base font-extrabold text-slate-900 mt-0.5">💰 Kalkulator Keuangan Keluarga Sakinah</h3>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <div>
+                  <label class="font-bold text-slate-700 block mb-1">Penghasilan Suami / Bulan (Rp)</label>
+                  <input id="kalk-gaji-suami" type="number" min="0" value="4000000" class="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+                </div>
+                <div>
+                  <label class="font-bold text-slate-700 block mb-1">Penghasilan Istri / Bulan (Rp)</label>
+                  <input id="kalk-gaji-istri" type="number" min="0" value="3000000" class="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+                </div>
+                <div>
+                  <label class="font-bold text-slate-700 block mb-1">Kebutuhan Pokok & Dapur (Rp)</label>
+                  <input id="kalk-pokok" type="number" min="0" value="3200000" class="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+                </div>
+                <div>
+                  <label class="font-bold text-slate-700 block mb-1">Cicilan / Sewa Rumah / Listrik (Rp)</label>
+                  <input id="kalk-cicilan" type="number" min="0" value="1500000" class="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+                </div>
+                <div class="sm:col-span-2">
+                  <label class="font-bold text-slate-700 block mb-1">Zakat, Infak, Sosial & Orang Tua (Rp)</label>
+                  <input id="kalk-sosial" type="number" min="0" value="500000" class="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+                </div>
+              </div>
+              <button onclick="hitungAnggaranKeluarga()" class="w-full py-2.5 px-4 rounded-xl text-xs font-extrabold bg-emerald-700 hover:bg-emerald-800 text-white transition cursor-pointer">Hitung & Simpan Perencanaan Keuangan</button>
+              <div id="hasil-kalkulator-keuangan" class="hidden p-4 rounded-2xl bg-slate-50 border border-slate-200 text-xs space-y-2"></div>
+            </div>
+
+            <!-- Kalkulator Skrining Kesehatan Reproduksi & 1000 HPK -->
+            <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-xs space-y-4">
+              <div>
+                <span class="text-[10px] font-extrabold uppercase tracking-wider text-teal-700">Pencegahan Stunting (Kemenag - Kemenkes - BKKBN)</span>
+                <h3 class="text-base font-extrabold text-slate-900 mt-0.5">🩺 Skrining Mandiri Kesehatan 1000 HPK (IMT, Hb, LILA)</h3>
+              </div>
+              <div class="grid grid-cols-2 gap-3 text-xs">
+                <div>
+                  <label class="font-bold text-slate-700 block mb-1">Berat Badan (kg) <span class="text-red-500">*</span></label>
+                  <input id="kes-bb" type="number" step="0.1" placeholder="Contoh: 55" class="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+                </div>
+                <div>
+                  <label class="font-bold text-slate-700 block mb-1">Tinggi Badan (cm) <span class="text-red-500">*</span></label>
+                  <input id="kes-tb" type="number" step="0.1" placeholder="Contoh: 162" class="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+                </div>
+                <div>
+                  <label class="font-bold text-slate-700 block mb-1">Kadar Hb Darah (g/dL)</label>
+                  <input id="kes-hb" type="number" step="0.1" placeholder="Normal >= 12" class="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+                </div>
+                <div>
+                  <label class="font-bold text-slate-700 block mb-1">Lingkar Lengan / LILA (cm)</label>
+                  <input id="kes-lila" type="number" step="0.1" placeholder="Normal >= 23.5" class="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+                </div>
+              </div>
+              <button onclick="hitungSkriningKesehatanCatin()" class="w-full py-2.5 px-4 rounded-xl text-xs font-extrabold bg-teal-700 hover:bg-teal-800 text-white transition cursor-pointer">Analisis & Simpan Skrining 1000 HPK</button>
+              <div id="hasil-skrining-kesehatan" class="hidden p-4 rounded-2xl bg-slate-50 border border-slate-200 text-xs space-y-2"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==================================================================
+             TAB 5 PESERTA: KONSULTASI PENYULUH / PENGHULU KUA (#tab-content-konsultasi)
+             ================================================================== -->
+        <div id="tab-content-konsultasi" class="hidden space-y-6">
+          <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-xs space-y-4">
+            <h2 class="text-lg font-extrabold text-slate-900">🩺 Ruang Konsultasi Privat Calon Pengantin dengan KUA</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+              <div class="lg:col-span-5 space-y-3">
+                <label class="block text-xs font-extrabold text-slate-700">Topik Konsultasi</label>
+                <select id="konsul-topik" class="w-full px-3.5 py-2.5 rounded-xl text-xs font-bold bg-slate-50 border border-slate-300">
+                  <option value="Fikih Munakahat & Hukum Islam">Fikih Munakahat & Persyaratan Akad</option>
+                  <option value="Psikologi & Dinamika Perkawinan">Psikologi & Komunikasi Pasangan</option>
+                  <option value="Kesehatan Reproduksi & 1000 HPK">Kesehatan Reproduksi & Gizi 1000 HPK</option>
+                  <option value="Manajemen Keuangan Keluarga">Manajemen Keuangan & Nafkah</option>
+                </select>
+                <label class="block text-xs font-extrabold text-slate-700">Pertanyaan / Permasalahan Anda</label>
+                <textarea id="konsul-pertanyaan" rows="4" maxlength="1000" placeholder="Tuliskan pertanyaan Anda kepada Fasilitator (Penghulu / Penyuluh Agama Islam) di KUA..." class="w-full px-3.5 py-2.5 rounded-xl text-xs bg-slate-50 border border-slate-300"></textarea>
+                <button onclick="simpanKonsultasiPeserta()" class="w-full py-2.5 px-4 rounded-xl text-xs font-extrabold bg-emerald-700 hover:bg-emerald-800 text-white transition cursor-pointer">📨 Kirim Pertanyaan Konsultasi</button>
+              </div>
+              <div class="lg:col-span-7 space-y-3">
+                <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-600">Riwayat Konsultasi & Jawaban Fasilitator KUA</h3>
+                <div id="list-riwayat-konsultasi-peserta" class="space-y-2.5 max-h-80 overflow-y-auto pr-1 text-xs"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==================================================================
+             TAB 6 PESERTA: BIODATA DIRI & RENCANA AKAD NIKAH (#tab-content-profil)
+             ================================================================== -->
+        <div id="tab-content-profil" class="hidden space-y-6">
+          <form onsubmit="handleUpdateProfil(event)" class="bg-white border border-slate-200 rounded-3xl p-6 lg:p-8 shadow-xs space-y-5">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-4">
+              <div>
+                <h2 class="text-lg font-extrabold text-slate-900">👤 Pembaruan Biodata & Lokasi KUA Pelaksana Akad</h2>
+                <p class="text-xs text-slate-500">Pastikan ejaan Nama Lengkap, NIK, Tempat/Tanggal Lahir, dan KUA sesuai KTP & berkas pendaftaran nikah</p>
+              </div>
+              <button type="submit" class="px-5 py-2.5 rounded-xl text-xs font-extrabold bg-emerald-700 hover:bg-emerald-800 text-white transition cursor-pointer">💾 Simpan Perubahan Profil</button>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
+              <div>
+                <label class="font-extrabold text-slate-700 block mb-1">Nama Lengkap Sesuai KTP <span class="text-red-500">*</span></label>
+                <input id="profil-nama" type="text" required class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+              </div>
+              <div>
+                <label class="font-extrabold text-slate-700 block mb-1">Kewarganegaraan</label>
+                <select id="profil-wn" onchange="ubahValidasiKewarganegaraan('profil')" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold">
+                  <option value="WNI">WNI (KTP 16 Digit)</option>
+                  <option value="WNA">WNA (Paspor Nikah Campuran)</option>
+                </select>
+              </div>
+              <div>
+                <label id="label-identitas-profil" class="font-extrabold text-slate-700 block mb-1">NIK KTP (16 Digit) <span class="text-red-500">*</span></label>
+                <input id="profil-nik" type="text" required maxlength="16" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-mono font-bold" />
+              </div>
+              <div>
+                <label class="font-extrabold text-slate-700 block mb-1">Tempat, Tanggal Lahir <span class="text-red-500">*</span></label>
+                <input id="profil-ttl" type="text" required oninput="sinkronUsiaDariInputTTL('profil-ttl', 'profil-usia')" placeholder="Contoh: Jepara, 14 Mei 1999" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+              </div>
+              <div>
+                <label class="font-extrabold text-slate-700 block mb-1">Usia Saat Ini (Tahun) <span class="text-red-500">*</span></label>
+                <input id="profil-usia" type="number" min="16" max="95" required oninput="cekPeringatanUsiaDini('profil-usia','alert-dispensasi-profil')" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+                <p id="alert-dispensasi-profil" class="hidden text-[11px] font-bold text-amber-800 bg-amber-50 border border-amber-200 rounded-lg p-2 mt-1">⚠️ Usia di bawah 19 tahun wajib melampirkan Penetapan Dispensasi Kawin Pengadilan Agama (UU No. 16/2019).</p>
+              </div>
+              <div>
+                <label class="font-extrabold text-slate-700 block mb-1">Jenis Kelamin <span class="text-red-500">*</span></label>
+                <select id="profil-jk" onchange="cekPengingatStatusKawinDanIddah('profil')" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold">
+                  <option value="Laki-laki">Laki-laki (Calon Suami)</option>
+                  <option value="Perempuan">Perempuan (Calon Istri)</option>
+                </select>
+              </div>
+              <div>
+                <label class="font-extrabold text-slate-700 block mb-1">Status Perkawinan</label>
+                <select id="profil-status-kawin" onchange="cekPengingatStatusKawinDanIddah('profil')" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold">
+                  <option value="Jejaka / Perawan">Jejaka / Perawan (Belum Pernah Menikah)</option>
+                  <option value="Duda / Janda Cerai Hidup">Duda / Janda Cerai Hidup (Akta Cerai PA)</option>
+                  <option value="Duda / Janda Cerai Mati">Duda / Janda Cerai Mati (Surat Kematian N6)</option>
+                  <option value="Beristri (Poligami)">Beristri (Izin Poligami Pengadilan Agama)</option>
+                </select>
+                <p id="alert-iddah-profil" class="hidden text-[11px] font-bold text-amber-800 bg-amber-50 border border-amber-200 rounded-lg p-2 mt-1"></p>
+              </div>
+              <div>
+                <label class="font-extrabold text-slate-700 block mb-1">Pendidikan Terakhir</label>
+                <select id="profil-pendidikan" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold">
+                  <option value="SD/MI">SD / MI</option>
+                  <option value="SMP/MTs">SMP / MTs</option>
+                  <option value="SMA/SMK/MA">SMA / SMK / MA</option>
+                  <option value="D3/D4">Diploma (D3 / D4)</option>
+                  <option value="S1">Sarjana (S1)</option>
+                  <option value="S2/S3">Pascasarjana (S2 / S3)</option>
+                </select>
+              </div>
+              <div>
+                <label class="font-extrabold text-slate-700 block mb-1">Pekerjaan</label>
+                <input id="profil-pekerjaan" type="text" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+              </div>
+              <div>
+                <label class="font-extrabold text-slate-700 block mb-1">Nomor WhatsApp Aktif <span class="text-red-500">*</span></label>
+                <input id="profil-wa" type="text" required class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+              </div>
+              <div>
+                <label class="font-extrabold text-slate-700 block mb-1">Alamat Email (Pemulihan Sandi)</label>
+                <input id="profil-email" type="email" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+              </div>
+              <div>
+                <label class="font-extrabold text-slate-700 block mb-1">Rencana Tanggal Akad Nikah</label>
+                <input id="profil-tgl-akad" type="date" onchange="cekTenggatSepuluhHariKerjaAkad(this.value, 'alert-akad-profil')" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+                <p id="alert-akad-profil" class="hidden text-[11px] font-bold text-amber-800 bg-amber-50 border border-amber-200 rounded-lg p-2 mt-1"></p>
+              </div>
+
+              <!-- Lokasi Provinsi, Kab/Kota, KUA, & Desa -->
+              <div>
+                <label class="font-extrabold text-slate-700 block mb-1">Provinsi KUA Tujuan <span class="text-red-500">*</span></label>
+                <select id="profil-provinsi" onchange="sinkronDropdownKabupatenForm('profil-provinsi','profil-kabupaten','profil-kua','datalist-desa-profil')" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold"></select>
+              </div>
+              <div>
+                <label class="font-extrabold text-slate-700 block mb-1">Kabupaten / Kota KUA <span class="text-red-500">*</span></label>
+                <select id="profil-kabupaten" onchange="sinkronDropdownKuaForm('profil-kabupaten','profil-kua','datalist-desa-profil')" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold"></select>
+              </div>
+              <div>
+                <label class="font-extrabold text-slate-700 block mb-1">Unit KUA Kecamatan <span class="text-red-500">*</span></label>
+                <select id="profil-kua" onchange="cekOpsiKuaManualForm('profil-kua','box-profil-kua-manual','profil-kua-manual');sinkronDatalistDesaDariKuaForm('profil-kua','datalist-desa-profil');" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold"></select>
+                <div id="box-profil-kua-manual" class="hidden mt-2">
+                  <input id="profil-kua-manual" type="text" placeholder="Ketik Nama KUA Kecamatan..." class="w-full px-3 py-2 rounded-xl bg-white border border-emerald-500 font-bold" />
+                </div>
+              </div>
+              <div>
+                <label class="font-extrabold text-slate-700 block mb-1">Desa / Kelurahan Domisili Akad</label>
+                <input id="profil-desa" type="text" list="datalist-desa-profil" placeholder="Pilih atau ketik nama Desa/Kelurahan..." class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+                <datalist id="datalist-desa-profil"></datalist>
+              </div>
+              <div class="sm:col-span-2">
+                <label class="font-extrabold text-slate-700 block mb-1">Alamat Lengkap Domisili</label>
+                <input id="profil-alamat" type="text" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+              </div>
+              <div class="sm:col-span-3 flex items-center gap-4 pt-2 border-t border-slate-100">
+                <img id="profil-preview-img" src="https://ui-avatars.com/api/?name=Catin&background=ecfdf5&color=065f46&bold=true" alt="Pasfoto" class="w-16 h-16 rounded-2xl object-cover border border-slate-300" />
+                <div class="space-y-1">
+                  <label class="font-extrabold text-slate-800 block">Unggah Pasfoto Resmi (Otomatis Kompresi Hemat Kuota)</label>
+                  <input type="file" accept="image/*" onchange="previewFoto(event)" class="text-xs text-slate-600" />
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+
+      </section>
+
+      <!-- ====================================================================
+           7. HALAMAN 3: DASBOR FASILITATOR / PENYULUH / PENGHULU KUA (#page-fasilitator)
+           ==================================================================== -->
+      <section id="page-fasilitator" class="hidden flex-1 px-4 lg:px-8 py-6 space-y-6 max-w-7xl w-full mx-auto fade-in">
+
+        <!-- Header Dasbor Fasilitator KUA (Putih Bersih Tanpa Background Hijau Mencolok) -->
+        <div class="bg-white border border-slate-200 border-l-4 border-l-emerald-700 rounded-3xl p-5 lg:p-6 shadow-soft flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div class="space-y-1">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-emerald-50 text-emerald-800 border border-emerald-200">PANEL FASILITATOR BIMWIN</span>
+              <span id="fasilitator-kua-badge" class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-slate-100 text-slate-700 border border-slate-200">KUA Kecamatan</span>
+            </div>
+            <h1 class="text-xl sm:text-2xl font-extrabold text-slate-900">Meja Verifikasi, Presensi QR, & Pengesahan Kelulusan Catin</h1>
+            <p class="text-xs text-slate-600">Validasi kehadiran tatap muka/daring, berikan rekomendasi fasilitator, dan sahkan penerbitan Sertifikat SAMAWA.</p>
+          </div>
+          <div class="flex flex-wrap items-center gap-2 shrink-0">
+            <button onclick="bukaModalScanQRFasilitator()" class="px-4 py-2.5 rounded-xl text-xs font-extrabold bg-emerald-700 hover:bg-emerald-800 text-white transition cursor-pointer">📷 Scan QR ID Card Catin</button>
+            <button onclick="bukaRegister(event)" class="px-4 py-2.5 rounded-xl text-xs font-extrabold bg-white hover:bg-slate-50 text-emerald-800 border border-emerald-300 transition cursor-pointer">➕ Daftarkan Catin</button>
+            <button onclick="bukaModalProfilFasilitator()" class="px-3.5 py-2.5 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 transition cursor-pointer">👨‍🏫 Profil & SK</button>
+          </div>
+        </div>
+
+        <!-- 4 Kartu Metrik Fasilitator KUA (Putih Bersih) -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs">
+            <p class="text-xs font-bold text-slate-500">Total Catin Binaan KUA</p>
+            <p id="fas-stat-total" class="text-2xl font-extrabold text-slate-900 mt-1">0</p>
+          </div>
+          <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs">
+            <p class="text-xs font-bold text-amber-800">Menunggu Verifikasi</p>
+            <p id="fas-stat-menunggu" class="text-2xl font-extrabold text-amber-700 mt-1">0</p>
+          </div>
+          <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs">
+            <p class="text-xs font-bold text-emerald-800">Disahkan Lulus ✓</p>
+            <p id="fas-stat-lulus" class="text-2xl font-extrabold text-emerald-700 mt-1">0</p>
+          </div>
+          <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs">
+            <p class="text-xs font-bold text-sky-800">Antrean Konsultasi</p>
+            <p id="fas-stat-konsultasi" class="text-2xl font-extrabold text-sky-700 mt-1">0</p>
+          </div>
+        </div>
+
+        <!-- Manajemen Jadwal Kelas Daring & Tatap Muka KUA -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- Jadwal Kelas Online -->
+          <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-xs space-y-3.5">
+            <h3 class="text-sm font-extrabold text-slate-900">💻 Buat Jadwal Kelas Daring (Zoom / Google Meet KUA)</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
+              <input id="fas-online-topik" type="text" placeholder="Nama Angkatan / Topik Sesi..." class="px-3 py-2 rounded-xl bg-slate-50 border border-slate-300 font-semibold" />
+              <input id="fas-online-waktu" type="text" placeholder="Hari, Tanggal & Jam (Contoh: Kamis, 19 Nov 09.00)" class="px-3 py-2 rounded-xl bg-slate-50 border border-slate-300 font-semibold" />
+              <input id="fas-online-narasumber" type="text" placeholder="Nama Narasumber / Penghulu / Penyuluh..." class="px-3 py-2 rounded-xl bg-slate-50 border border-slate-300 font-semibold" />
+              <input id="fas-online-link" type="url" placeholder="https://meet.google.com/... atau Zoom" class="px-3 py-2 rounded-xl bg-slate-50 border border-slate-300 font-semibold" />
+            </div>
+            <button onclick="tambahJadwalKelas('online')" class="px-4 py-2 rounded-xl text-xs font-extrabold bg-teal-700 hover:bg-teal-800 text-white transition cursor-pointer">➕ Terbitkan Jadwal Daring</button>
+            <div id="list-jadwal-online-fasilitator" class="space-y-2 pt-2 border-t border-slate-100 text-xs"></div>
+          </div>
+
+          <!-- Jadwal Kelas Tatap Muka Balai Nikah KUA -->
+          <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-xs space-y-3.5">
+            <h3 class="text-sm font-extrabold text-slate-900">🏛️ Buat Jadwal Kelas Tatap Muka Balai Nikah KUA</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
+              <input id="fas-offline-angkatan" type="text" placeholder="Nama Angkatan (Contoh: Angkatan XII)..." class="px-3 py-2 rounded-xl bg-slate-50 border border-slate-300 font-semibold" />
+              <input id="fas-offline-waktu" type="text" placeholder="Hari, Tanggal & Jam Pelaksanaan..." class="px-3 py-2 rounded-xl bg-slate-50 border border-slate-300 font-semibold" />
+              <input id="fas-offline-lokasi" type="text" placeholder="Ruangan / Aula Balai Nikah KUA..." class="px-3 py-2 rounded-xl bg-slate-50 border border-slate-300 font-semibold" />
+              <input id="fas-offline-kuota" type="number" min="2" value="30" placeholder="Kuota Kursi Peserta" class="px-3 py-2 rounded-xl bg-slate-50 border border-slate-300 font-semibold" />
+            </div>
+            <button onclick="tambahJadwalKelas('offline')" class="px-4 py-2 rounded-xl text-xs font-extrabold bg-emerald-700 hover:bg-emerald-800 text-white transition cursor-pointer">➕ Terbitkan Jadwal Tatap Muka</button>
+            <div id="list-jadwal-offline-fasilitator" class="space-y-2 pt-2 border-t border-slate-100 text-xs"></div>
+          </div>
+        </div>
+
+        <!-- Tabel Verifikasi & Kelulusan Peserta Fasilitator (Header Putih Bersih) -->
+        <div class="bg-white border border-slate-200 rounded-3xl p-5 lg:p-6 shadow-xs space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <h2 class="text-base font-extrabold text-slate-900">📋 Daftar Calon Pengantin & Pengesahan Kelulusan</h2>
+              <p class="text-xs text-slate-500">Centang Hadir & Lulus lalu klik Simpan (Otomatis menyinkronkan pasangan Suami-Istri)</p>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+              <select id="filter-status-fasilitator" onchange="renderTabelFasilitator(1)" class="px-3 py-2 rounded-xl text-xs font-bold bg-slate-50 border border-slate-300 text-slate-800">
+                <option value="Semua">Semua Peserta KUA</option>
+                <option value="SiapVerifikasi">Sudah Tuntas MOOC (Siap Diverifikasi)</option>
+                <option value="Menunggu">Belum Diverifikasi Lulus</option>
+                <option value="HadirBelumLulus">Sudah Hadir Kelas (Belum Lulus)</option>
+                <option value="Lulus">Sudah Terverifikasi Lulus ✓</option>
+              </select>
+              <input id="cari-peserta-fasilitator" type="text" oninput="renderTabelFasilitator(1)" onkeydown="if(event.key==='Enter')event.preventDefault();" placeholder="Cari Nama / NIK / Desa / Tgl Akad..." class="px-3.5 py-2 rounded-xl text-xs font-semibold bg-white border border-slate-300 w-56" />
+            </div>
+          </div>
+
+          <div class="overflow-x-auto border border-slate-200 rounded-2xl">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr class="bg-slate-50 text-slate-700 border-b border-slate-200 font-extrabold uppercase text-[11px]">
+                  <th class="py-3 px-3">Peserta & Pasangan</th>
+                  <th class="py-3 px-3">Progres MOOC & Kompak</th>
+                  <th class="py-3 px-3">Presensi Kelas</th>
+                  <th class="py-3 px-3">Catatan Pembimbingan Fasilitator</th>
+                  <th class="py-3 px-3 text-center">Pengesahan</th>
+                  <th class="py-3 px-3 text-center">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="tabel-peserta-fasilitator" class="divide-y divide-slate-200"></tbody>
+            </table>
+          </div>
+          <div id="paginasi-tabel-fasilitator" class="flex items-center justify-between text-xs pt-2"></div>
+        </div>
+
+        <!-- Panel Konsultasi Masuk di Fasilitator -->
+        <div class="bg-white border border-slate-200 rounded-3xl p-5 lg:p-6 shadow-xs space-y-3">
+          <h3 class="text-base font-extrabold text-slate-900">💬 Pertanyaan Konsultasi Calon Pengantin</h3>
+          <div id="list-konsultasi-masuk-fasilitator" class="space-y-3 text-xs"></div>
+        </div>
+
+      </section>
+
+      <!-- ====================================================================
+           8. HALAMAN 4: DASBOR EKSEKUTIF 4 LEVEL ADMIN (#page-admin)
+           (Level 1: Bimas Islam Pusat | Level 2: Kanwil Provinsi | Level 3: Kankemenag Kab/Kota | Level 4: KUA Kecamatan)
+           ==================================================================== -->
+      <section id="page-admin" class="hidden flex-1 px-4 lg:px-8 py-6 space-y-6 max-w-7xl w-full mx-auto fade-in">
+
+        <!-- BANNER KOMANDO ADMIN: PUTIH BERSIH TANPA BACKGROUND HIJAU GELAP -->
+        <div id="banner-kontrol-bimas-pusat" class="bg-white border border-slate-200 border-l-4 border-l-emerald-700 rounded-3xl p-5 lg:p-6 shadow-soft space-y-4 no-print">
+          <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-4">
+            <div class="space-y-1">
+              <div class="flex flex-wrap items-center gap-2">
+                <span id="badge-level-komando-admin" class="px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-emerald-50 text-emerald-800 border border-emerald-200">PUSAT KOMANDO EKSEKUTIF</span>
+                <span id="teks-cakupan-aktif-admin" class="text-xs font-bold text-slate-500">Cakupan Nasional: 38 Provinsi • 514 Kab/Kota • 5.917 KUA (SK No. 4/2026)</span>
+              </div>
+              <h1 id="judul-utama-dasbor-admin" class="text-xl sm:text-2xl font-extrabold text-slate-900">Dasbor Monitoring & Kepatuhan Bimbingan Perkawinan</h1>
+            </div>
+
+            <!-- Filter Lintas Wilayah Nasional (Provinsi & Kab/Kota) -->
+            <div class="flex flex-wrap items-center gap-2">
+              <div id="wrap-filter-nasional-provinsi">
+                <select id="filter-nasional-provinsi" onchange="terapkanFilterNasionalAdmin('prov')" class="px-3 py-2 rounded-xl text-xs font-extrabold bg-slate-50 border border-slate-300 text-slate-800 focus:border-emerald-600">
+                  <option value="Semua">Semua Provinsi (38 Provinsi)</option>
+                </select>
+              </div>
+              <div id="wrap-filter-nasional-kabupaten">
+                <select id="filter-nasional-kabupaten" onchange="terapkanFilterNasionalAdmin('kab')" class="px-3 py-2 rounded-xl text-xs font-extrabold bg-slate-50 border border-slate-300 text-slate-800 focus:border-emerald-600">
+                  <option value="Semua">Semua Kabupaten/Kota (514 Kab/Kota)</option>
+                </select>
+              </div>
+              <button onclick="bukaRegister(event)" class="px-3.5 py-2 rounded-xl text-xs font-extrabold bg-emerald-700 hover:bg-emerald-800 text-white transition cursor-pointer">➕ Daftarkan Catin</button>
+              <button id="btn-top-kelola-wilayah" onclick="bukaModalMultiWilayahNasional()" class="px-3.5 py-2 rounded-xl text-xs font-extrabold bg-white hover:bg-slate-50 text-emerald-800 border border-emerald-300 transition cursor-pointer">🗺️ Wilayah & KUA</button>
+              <button id="btn-top-kelola-desa" onclick="bukaModalKelolaDesaKua()" class="hidden px-3.5 py-2 rounded-xl text-xs font-extrabold bg-white hover:bg-slate-50 text-emerald-800 border border-emerald-300 transition cursor-pointer">🏘️ Kelola Desa</button>
+              <button id="btn-top-generate-akun" onclick="generateAkunSesuaiLevelAdmin()" class="px-3.5 py-2 rounded-xl text-xs font-extrabold bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 transition cursor-pointer">⚡ Generate Akun Wilayah</button>
+            </div>
+          </div>
+
+          <!-- Bar Pengumuman & Mode Pemeliharaan (Khusus Admin) -->
+          <div class="pt-3 border-t border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs">
+            <div class="flex-1 flex gap-2">
+              <input id="input-pengumuman-admin" type="text" placeholder="Ketik teks pengumuman berjalan untuk seluruh Calon Pengantin & KUA..." class="flex-1 px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-300 font-semibold text-slate-800" />
+              <button onclick="simpanPengumumanAdmin()" class="px-4 py-2 rounded-xl font-extrabold bg-slate-800 hover:bg-slate-900 text-white shrink-0 transition cursor-pointer">📢 Update Info</button>
+            </div>
+            <div class="flex items-center gap-3 shrink-0">
+              <label class="inline-flex items-center gap-2 font-bold text-slate-700 cursor-pointer">
+                <input id="toggle-maintenance-mode" type="checkbox" onchange="ubahModeMaintenance(this.checked)" class="rounded border-slate-300 text-emerald-700 focus:ring-emerald-600" />
+                <span>Mode Pemeliharaan</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5 Kartu Statistik Eksekutif Admin (Putih Bersih) -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+          <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs">
+            <p class="text-xs font-bold text-slate-500">Total Pendaftar Catin</p>
+            <p id="stat-total-peserta" class="text-2xl font-extrabold text-slate-900 mt-1">0</p>
+            <span class="text-[10px] font-semibold text-slate-400">Sesuai Filter Aktif</span>
+          </div>
+          <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs">
+            <p class="text-xs font-bold text-sky-700">Catin Pria (Suami)</p>
+            <p id="stat-catin-pria" class="text-2xl font-extrabold text-slate-900 mt-1">0</p>
+            <span class="text-[10px] font-semibold text-sky-700">Laki-laki</span>
+          </div>
+          <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs">
+            <p class="text-xs font-bold text-rose-700">Catin Wanita (Istri)</p>
+            <p id="stat-catin-wanita" class="text-2xl font-extrabold text-slate-900 mt-1">0</p>
+            <span class="text-[10px] font-semibold text-rose-700">Perempuan</span>
+          </div>
+          <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs">
+            <p class="text-xs font-bold text-amber-700">Sedang Belajar MOOC</p>
+            <p id="stat-sedang-belajar" class="text-2xl font-extrabold text-amber-700 mt-1">0</p>
+            <span class="text-[10px] font-semibold text-amber-700">Proses Modul / Verifikasi</span>
+          </div>
+          <div class="col-span-2 sm:col-span-1 bg-white border border-emerald-200 rounded-2xl p-4 shadow-xs">
+            <p class="text-xs font-bold text-emerald-800">Lulus & Bersertifikat</p>
+            <p id="stat-lulus-sertifikat" class="text-2xl font-extrabold text-emerald-700 mt-1">0</p>
+            <span class="text-[10px] font-bold text-emerald-700">Terbit Sertifikat ✓</span>
+          </div>
+        </div>
+
+        <!-- PETA KEPATUHAN HEATMAP ADAPTIF 4 LEVEL (Provinsi / KabKota / KUA / Desa) -->
+        <div class="bg-white border border-slate-200 rounded-3xl p-5 lg:p-6 shadow-xs space-y-4 no-print">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3.5">
+            <div>
+              <span id="subjudul-heatmap-level" class="text-[11px] font-extrabold uppercase tracking-wider text-emerald-700">Monitoring Kepatuhan Wilayah</span>
+              <h2 id="judul-heatmap-level" class="text-base font-extrabold text-slate-900">Peta Sebaran & Persentase Kelulusan Wilayah</h2>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="eksporRekapKepatuhanWilayahExcel()" class="px-3.5 py-2 rounded-xl text-xs font-extrabold bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border border-emerald-200 transition cursor-pointer">📊 Unduh Tabel Ranking Wilayah (.xls)</button>
+            </div>
+          </div>
+          <div id="grid-16kua" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 max-h-96 overflow-y-auto pr-1"></div>
+        </div>
+
+        <!-- 8 GRAFIK ANALITIK DEMOGRAFI & AKADEMIK NASIONAL -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 no-print">
+          <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-xs space-y-3">
+            <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-700">1. Capaian Pendaftar vs Kelulusan per Wilayah/Unit</h3>
+            <div class="h-64 relative"><canvas id="chart-admin-kua"></canvas></div>
+          </div>
+          <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-xs space-y-3">
+            <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-700">2. Proporsi Ketuntasan 8 Langkah Pembelajaran</h3>
+            <div class="h-64 relative"><canvas id="chart-admin-status"></canvas></div>
+          </div>
+          <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-xs space-y-3">
+            <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-700">3. Demografi Kelompok Usia & Pemetaan Usia Dini (<19 Thn)</h3>
+            <div class="h-56 relative"><canvas id="chart-admin-usia"></canvas></div>
+          </div>
+          <div class="bg-white border border-slate-200 rounded-3xl p-5 shadow-xs space-y-3">
+            <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-700">4. Latar Belakang Pendidikan Calon Pengantin</h3>
+            <div class="h-56 relative"><canvas id="chart-admin-pendidikan"></canvas></div>
+          </div>
+        </div>
+
+        <!-- TABEL MANAJEMEN DATA PESERTA & EKSPOR LAPORAN RESMI (HEADER PUTIH BERSIH) -->
+        <div class="bg-white border border-slate-200 rounded-3xl p-5 lg:p-6 shadow-xs space-y-4">
+          <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-4 border-b border-slate-200 pb-4 no-print">
+            <div>
+              <h2 class="text-base font-extrabold text-slate-900">📋 Database Calon Pengantin & Penerbitan Laporan Dinas</h2>
+              <p class="text-xs text-slate-500">Filter berdasarkan Unit KUA/Desa, Periode Bulan, atau Kata Kunci, lalu unduh Laporan Rekapitulasi PDF / Excel Resmi</p>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+              <button onclick="downloadRekapPDF()" class="px-4 py-2.5 rounded-xl text-xs font-extrabold bg-emerald-700 hover:bg-emerald-800 text-white transition cursor-pointer">📄 Cetak Laporan Dinas (PDF)</button>
+              <button onclick="eksporRekapExcel()" class="px-4 py-2.5 rounded-xl text-xs font-extrabold bg-white hover:bg-slate-50 text-emerald-800 border border-emerald-300 transition cursor-pointer">📊 Ekspor Data SIMKAH (.xls)</button>
+            </div>
+          </div>
+
+          <!-- Bar Filter Tabel Admin (Putih Bersih) -->
+          <div class="bg-slate-50 border border-slate-200 rounded-2xl p-3.5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5 text-xs no-print">
+            <div>
+              <label id="label-dropdown-filter-unit-admin" class="font-extrabold text-slate-600 block mb-1 text-[11px]">Filter Unit KUA / Desa</label>
+              <select id="filter-kua" onchange="terapkanFilterAdmin()" class="w-full px-3 py-2 rounded-xl bg-white border border-slate-300 font-bold text-slate-800">
+                <option value="Semua">Semua Unit KUA</option>
+              </select>
+            </div>
+            <div>
+              <label class="font-extrabold text-slate-600 block mb-1 text-[11px]">Periode Pendaftaran / Akad</label>
+              <input id="filter-bulan-admin" type="month" onchange="terapkanFilterAdmin()" class="w-full px-3 py-2 rounded-xl bg-white border border-slate-300 font-bold text-slate-800" />
+            </div>
+            <div class="sm:col-span-2">
+              <label class="font-extrabold text-slate-600 block mb-1 text-[11px]">Cari Nama / NIK / No. Sertifikat / No. WA / Tgl Akad</label>
+              <input id="input-cari-admin" type="text" oninput="terapkanFilterAdmin()" onkeydown="if(event.key==='Enter')event.preventDefault();" placeholder="Ketik kata kunci pencarian..." class="w-full px-3.5 py-2 rounded-xl bg-white border border-slate-300 font-semibold text-slate-900" />
+            </div>
+            <div class="flex items-end">
+              <button onclick="resetFilterAdmin()" class="w-full py-2 px-3 rounded-xl font-extrabold bg-slate-200 hover:bg-slate-300 text-slate-700 transition cursor-pointer">🔄 Reset Filter</button>
+            </div>
+          </div>
+
+          <!-- Tabel Data Peserta Admin (Header Terang Bersih) -->
+          <div class="overflow-x-auto border border-slate-200 rounded-2xl">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr class="bg-slate-50 text-slate-700 border-b border-slate-200 font-extrabold uppercase text-[11px]">
+                  <th class="py-3 px-3">No</th>
+                  <th class="py-3 px-3">Calon Pengantin & NIK</th>
+                  <th class="py-3 px-3">Wilayah KUA & Desa</th>
+                  <th class="py-3 px-3">Pasangan & Rencana Akad</th>
+                  <th class="py-3 px-3">Progres & Skor MOOC</th>
+                  <th class="py-3 px-3 text-center">Status Sertifikat</th>
+                  <th class="py-3 px-3 text-center no-print">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="admin-table-body" class="divide-y divide-slate-200"></tbody>
+            </table>
+          </div>
+          <div id="paginasi-tabel-admin" class="flex items-center justify-between text-xs pt-2 no-print"></div>
+        </div>
+
+      </section>
+
+      <!-- ====================================================================
+           9. FOOTER RESMI DIREKTORAT JENDERAL BIMAS ISLAM (PUTIH BERSIH)
+           ==================================================================== -->
+      <footer class="mt-auto bg-white border-t border-slate-200 px-4 lg:px-8 py-6 text-center text-xs text-slate-600 no-print">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div class="flex items-center gap-2.5">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Kementerian_Agama_new_logo.png/300px-Kementerian_Agama_new_logo.png" alt="Logo Kemenag" class="w-6 h-6 object-contain" onerror="this.style.display='none'" />
+            <span class="font-extrabold text-slate-800">SAMAWA — Sarana Membangun Wawasan Keluarga</span>
+          </div>
+          <p class="text-[11px] font-semibold text-slate-500">Copyright © 2026 — Direktorat Jenderal Bimbingan Masyarakat Islam Kementerian Agama RI • Berdasarkan PMA No. 30/2024 & SK Dirjen No. 4/2026</p>
+        </div>
+      </footer>
+
+      <!-- ====================================================================
+           10. BOTTOM NAVIGATION BAR MOBILE (PUTIH BERSIH & RESPONSIF)
+           ==================================================================== -->
+      <nav id="app-mobile-bottom-nav" class="lg:hidden sticky bottom-0 z-30 bg-white/95 backdrop-blur border-t border-slate-200 px-2 py-1.5 no-print">
+        <!-- Menu Mobile Publik -->
+        <div id="mob-nav-publik" class="grid grid-cols-4 gap-1 text-[10px] font-bold text-slate-600">
+          <a href="#section-hero-publik" class="flex flex-col items-center py-1 rounded-xl text-emerald-800 bg-emerald-50 font-extrabold"><span>🏛️</span><span>Beranda</span></a>
+          <a href="#section-cek-sertifikat" class="flex flex-col items-center py-1 rounded-xl hover:bg-slate-50"><span>🔍</span><span>Validasi QR</span></a>
+          <a href="#section-direktori-kua" class="flex flex-col items-center py-1 rounded-xl hover:bg-slate-50"><span>🗺️</span><span>5.917 KUA</span></a>
+          <button onclick="bukaLogin()" class="flex flex-col items-center py-1 rounded-xl hover:bg-slate-50 cursor-pointer"><span>🔐</span><span>Masuk</span></button>
+        </div>
+        <!-- Menu Mobile Peserta -->
+        <div id="mob-nav-peserta" class="hidden grid grid-cols-5 gap-1 text-[10px] font-bold text-slate-600">
+          <button onclick="gantiTabPeserta('belajar')" class="flex flex-col items-center py-1 rounded-xl text-emerald-800 bg-emerald-50 font-extrabold"><span>🎓</span><span>Belajar</span></button>
+          <button onclick="gantiTabPeserta('idcard')" class="flex flex-col items-center py-1 rounded-xl"><span>🪪</span><span>ID Card</span></button>
+          <button onclick="gantiTabPeserta('kalkulator')" class="flex flex-col items-center py-1 rounded-xl"><span>🧮</span><span>1000 HPK</span></button>
+          <button onclick="gantiTabPeserta('konsultasi')" class="flex flex-col items-center py-1 rounded-xl"><span>🩺</span><span>Konsul</span></button>
+          <button onclick="gantiTabPeserta('profil')" class="flex flex-col items-center py-1 rounded-xl"><span>👤</span><span>Profil</span></button>
+        </div>
+      </nav>
+
+    </div><!-- Penutup #main-content-wrapper -->
+  </div><!-- Penutup Layout Shell Utama -->
+    <!-- ========================================================================
+       11. SELURUH 16 JENDELA MODAL INTERAKTIF (CLEAN ENTERPRISE WHITE UI)
+       ======================================================================== -->
+
+  <!-- MODAL 1: LOGIN AKUN (PESERTA, FASILITATOR, & ADMIN 4 LEVEL) -->
+  <div id="login-modal" class="hidden fixed inset-0 z-[200] bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 no-print">
+    <div class="bg-white border border-slate-200 rounded-3xl max-w-md w-full overflow-hidden shadow-2xl fade-in">
+      <div class="bg-slate-50 border-b border-slate-200 px-6 py-4 flex items-center justify-between">
+        <div>
+          <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-700">Autentikasi SAMAWA Nasional</span>
+          <h3 class="text-base font-extrabold text-slate-900">Masuk ke Ruang Kerja / Panel KUA</h3>
+        </div>
+        <button onclick="tutupLogin()" class="w-8 h-8 rounded-xl bg-white border border-slate-200 text-slate-500 hover:text-slate-800 font-bold cursor-pointer">✕</button>
+      </div>
+      <form onsubmit="handleLogin(event)" class="p-6 space-y-4 text-xs">
+        <div id="login-error" class="hidden p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 font-bold"></div>
+        <div>
+          <label class="font-extrabold text-slate-700 block mb-1">Username / ID Akun <span class="text-red-500">*</span></label>
+          <input id="login-username" type="text" required autocomplete="username" placeholder="Masukkan Username Anda..." class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold text-slate-900 focus:bg-white focus:outline-none focus:border-emerald-600" />
+        </div>
+        <div>
+          <label class="font-extrabold text-slate-700 block mb-1">Kata Sandi (Password) <span class="text-red-500">*</span></label>
+          <div class="relative">
+            <input id="login-password" type="password" required autocomplete="current-password" placeholder="Masukkan Kata Sandi..." class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold text-slate-900 focus:bg-white focus:outline-none focus:border-emerald-600 pr-16" />
+            <button type="button" onclick="toggleLihatSandi('login-password', this)" class="absolute right-2.5 top-2 px-2 py-1 rounded-lg text-[10px] font-extrabold bg-slate-200/70 text-slate-700 cursor-pointer">Lihat</button>
+          </div>
+        </div>
+        <div class="flex items-center justify-between pt-1">
+          <button type="button" onclick="bukaModalLupaPassword()" class="text-emerald-700 hover:underline font-extrabold cursor-pointer">Lupa Kata Sandi?</button>
+          <button type="button" onclick="tutupLogin();bukaRegister(event);" class="text-slate-600 hover:text-slate-900 font-bold cursor-pointer">Belum punya akun? Daftar</button>
+        </div>
+        <button id="btn-submit-login" type="submit" class="w-full py-3 px-4 rounded-2xl text-xs font-extrabold bg-emerald-700 hover:bg-emerald-800 text-white shadow-sm transition cursor-pointer">🔐 Masuk Sekarang</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 2: PENDAFTARAN CALON PENGANTIN (38 PROVINSI, 514 KAB/KOTA, 5.917 KUA SK 2026) -->
+  <div id="register-modal" class="hidden fixed inset-0 z-[200] bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto no-print">
+    <div class="bg-white border border-slate-200 rounded-3xl max-w-3xl w-full my-8 overflow-hidden shadow-2xl fade-in">
+      <div class="bg-slate-50 border-b border-slate-200 px-6 py-4 flex items-center justify-between sticky top-0 z-10">
+        <div>
+          <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-700">Formulir Pendaftaran Resmi (PMA No. 30 Tahun 2024)</span>
+          <h3 class="text-base font-extrabold text-slate-900">Pendaftaran Bimbingan Perkawinan Calon Pengantin</h3>
+        </div>
+        <button onclick="tutupRegister()" class="w-8 h-8 rounded-xl bg-white border border-slate-200 text-slate-500 hover:text-slate-800 font-bold cursor-pointer">✕</button>
+      </div>
+      <form onsubmit="handleRegister(event)" class="p-6 space-y-4 text-xs max-h-[82vh] overflow-y-auto">
+        <div id="reg-error" class="hidden p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 font-bold"></div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+          <div>
+            <label class="font-extrabold text-slate-700 block mb-1">Username Login (Huruf Kecil/Angka) <span class="text-red-500">*</span></label>
+            <input id="reg-username" type="text" required oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9_]/g,'')" placeholder="contoh: ahmad_jepara" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+          </div>
+          <div>
+            <label class="font-extrabold text-slate-700 block mb-1">Kata Sandi <span class="text-red-500">*</span></label>
+            <input id="reg-password" type="password" required autocomplete="new-password" placeholder="Minimal 4 karakter..." class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+          </div>
+          <div>
+            <label class="font-extrabold text-slate-700 block mb-1">Nama Lengkap Sesuai KTP <span class="text-red-500">*</span></label>
+            <input id="reg-nama" type="text" required placeholder="Nama Lengkap & Gelar..." class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+          </div>
+          <div>
+            <label class="font-extrabold text-slate-700 block mb-1">Kewarganegaraan <span class="text-red-500">*</span></label>
+            <select id="reg-wn" onchange="ubahValidasiKewarganegaraan('reg')" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold">
+              <option value="WNI">WNI (KTP 16 Digit)</option>
+              <option value="WNA">WNA (Paspor Nikah Campuran)</option>
+            </select>
+          </div>
+          <div>
+            <label id="label-identitas-reg" class="font-extrabold text-slate-700 block mb-1">NIK KTP (16 Digit) <span class="text-red-500">*</span></label>
+            <input id="reg-nik" type="text" required maxlength="16" oninput="bantuIsiUsiaDanGenderDariNIK(this.value)" placeholder="16 Digit NIK KTP..." class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-mono font-bold" />
+          </div>
+          <div>
+            <label class="font-extrabold text-slate-700 block mb-1">Tempat, Tanggal Lahir <span class="text-red-500">*</span></label>
+            <input id="reg-ttl" type="text" required oninput="sinkronUsiaDariInputTTL('reg-ttl','reg-usia')" placeholder="Contoh: Jepara, 14 Mei 1999" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+          </div>
+          <div>
+            <label class="font-extrabold text-slate-700 block mb-1">Usia Saat Ini (Tahun) <span class="text-red-500">*</span></label>
+            <input id="reg-usia" type="number" min="16" max="95" required oninput="cekPeringatanUsiaDini('reg-usia','alert-dispensasi-reg')" placeholder="Contoh: 25" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+          </div>
+          <div>
+            <label class="font-extrabold text-slate-700 block mb-1">Jenis Kelamin <span class="text-red-500">*</span></label>
+            <select id="reg-jk" onchange="cekPengingatStatusKawinDanIddah('reg')" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold">
+              <option value="Laki-laki">Laki-laki (Calon Suami)</option>
+              <option value="Perempuan">Perempuan (Calon Istri)</option>
+            </select>
+          </div>
+          <div>
+            <label class="font-extrabold text-slate-700 block mb-1">Status Perkawinan <span class="text-red-500">*</span></label>
+            <select id="reg-status-kawin" onchange="cekPengingatStatusKawinDanIddah('reg')" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold">
+              <option value="Jejaka / Perawan">Jejaka / Perawan (Belum Pernah Menikah)</option>
+              <option value="Duda / Janda Cerai Hidup">Duda / Janda Cerai Hidup (Akta Cerai PA)</option>
+              <option value="Duda / Janda Cerai Mati">Duda / Janda Cerai Mati (Model N6)</option>
+              <option value="Beristri (Poligami)">Beristri (Izin Poligami Pengadilan Agama)</option>
+            </select>
+          </div>
+          <div>
+            <label class="font-extrabold text-slate-700 block mb-1">Pendidikan Terakhir</label>
+            <select id="reg-pendidikan" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold">
+              <option value="SMA/SMK/MA">SMA / SMK / MA</option>
+              <option value="S1">Sarjana (S1)</option>
+              <option value="D3/D4">Diploma (D3 / D4)</option>
+              <option value="SMP/MTs">SMP / MTs</option>
+              <option value="SD/MI">SD / MI</option>
+              <option value="S2/S3">Pascasarjana (S2 / S3)</option>
+            </select>
+          </div>
+          <div>
+            <label class="font-extrabold text-slate-700 block mb-1">Pekerjaan <span class="text-red-500">*</span></label>
+            <input id="reg-pekerjaan" type="text" required placeholder="Contoh: Karyawan Swasta / Wiraswasta" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+          </div>
+          <div>
+            <label class="font-extrabold text-slate-700 block mb-1">Nomor WhatsApp Aktif <span class="text-red-500">*</span></label>
+            <input id="reg-wa" type="text" required placeholder="0812xxxxxxxx" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+          </div>
+        </div>
+
+        <!-- Peringatan Hukum Usia / Iddah / Rekomendasi Lintas Wilayah -->
+        <p id="alert-dispensasi-reg" class="hidden text-[11px] font-bold text-amber-800 bg-amber-50 border border-amber-200 rounded-xl p-2.5">⚠️ Perhatian Regulasi (UU No. 16 Tahun 2019): Usia di bawah 19 tahun wajib melampirkan Surat Penetapan Dispensasi Kawin dari Pengadilan Agama saat pemberkasan di KUA.</p>
+        <p id="alert-iddah-reg" class="hidden text-[11px] font-bold text-amber-800 bg-amber-50 border border-amber-200 rounded-xl p-2.5"></p>
+        <p id="alert-rekomendasi-nik-reg" class="hidden text-[11px] font-bold text-sky-800 bg-sky-50 border border-sky-200 rounded-xl p-2.5"></p>
+
+        <!-- Pilihan Wilayah Berjenjang: Provinsi -> Kabupaten/Kota -> KUA (SK No. 4 Tahun 2026) -> Desa -->
+        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-extrabold uppercase tracking-wider text-emerald-800">Lokasi KUA Pelaksana Bimbingan & Akad Nikah (SK Dirjen No. 4/2026)</span>
+            <span class="text-[10px] font-bold text-slate-500">38 Provinsi • 514 Kab/Kota • 5.917 KUA</span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <div>
+              <label class="font-extrabold text-slate-700 block mb-1">1. Provinsi <span class="text-red-500">*</span></label>
+              <select id="reg-provinsi" required onchange="sinkronDropdownKabupatenForm('reg-provinsi','reg-kabupaten','reg-kua','datalist-desa-reg')" class="w-full px-3 py-2.5 rounded-xl bg-white border border-slate-300 font-bold"></select>
+            </div>
+            <div>
+              <label class="font-extrabold text-slate-700 block mb-1">2. Kabupaten / Kota <span class="text-red-500">*</span></label>
+              <select id="reg-kabupaten" required onchange="sinkronDropdownKuaForm('reg-kabupaten','reg-kua','datalist-desa-reg')" class="w-full px-3 py-2.5 rounded-xl bg-white border border-slate-300 font-bold"></select>
+            </div>
+            <div>
+              <label class="font-extrabold text-slate-700 block mb-1">3. KUA Kecamatan <span class="text-red-500">*</span></label>
+              <select id="reg-kua" required onchange="cekOpsiKuaManualForm('reg-kua','box-reg-kua-manual','reg-kua-manual');sinkronDatalistDesaDariKuaForm('reg-kua','datalist-desa-reg');" class="w-full px-3 py-2.5 rounded-xl bg-white border border-slate-300 font-bold"></select>
+              <div id="box-reg-kua-manual" class="hidden mt-2">
+                <input id="reg-kua-manual" type="text" placeholder="Ketik Nama KUA Kecamatan..." class="w-full px-3 py-2 rounded-xl bg-white border border-emerald-600 font-bold" />
+              </div>
+            </div>
+            <div>
+              <label class="font-extrabold text-slate-700 block mb-1">4. Desa / Kelurahan Akad</label>
+              <input id="reg-desa" type="text" list="datalist-desa-reg" placeholder="Pilih / ketik Desa..." class="w-full px-3 py-2.5 rounded-xl bg-white border border-slate-300 font-bold" />
+              <datalist id="datalist-desa-reg"></datalist>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+            <div>
+              <label class="font-extrabold text-slate-700 block mb-1">Rencana Tanggal Akad Nikah</label>
+              <input id="reg-tgl-akad" type="date" onchange="cekTenggatSepuluhHariKerjaAkad(this.value,'alert-akad-reg')" class="w-full px-3 py-2 rounded-xl bg-white border border-slate-300 font-bold" />
+            </div>
+            <div>
+              <label class="font-extrabold text-slate-700 block mb-1">Email (Opsional / Pemulihan)</label>
+              <input id="reg-email" type="email" placeholder="nama@email.com" class="w-full px-3 py-2 rounded-xl bg-white border border-slate-300 font-bold" />
+            </div>
+            <div>
+              <label class="font-extrabold text-slate-700 block mb-1">Username / NIK Pasangan (Jika Ada)</label>
+              <input id="reg-pasangan-user" type="text" placeholder="Opsional (Bisa diisi nanti)" class="w-full px-3 py-2 rounded-xl bg-white border border-slate-300 font-bold" />
+            </div>
+          </div>
+          <p id="alert-akad-reg" class="hidden text-[11px] font-bold text-amber-800 bg-amber-50 border border-amber-200 rounded-xl p-2"></p>
+          <div>
+            <label class="font-extrabold text-slate-700 block mb-1">Alamat Lengkap Sesuai KTP <span class="text-red-500">*</span></label>
+            <input id="reg-alamat" type="text" required placeholder="Jl. / Dukuh / RT / RW / Desa / Kecamatan..." class="w-full px-3.5 py-2 rounded-xl bg-white border border-slate-300 font-bold" />
+          </div>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-200">
+          <button type="button" onclick="tutupRegister()" class="px-4 py-2.5 rounded-xl font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 cursor-pointer">Batal</button>
+          <button id="btn-submit-register" type="submit" class="px-6 py-2.5 rounded-xl font-extrabold bg-emerald-700 hover:bg-emerald-800 text-white shadow-sm cursor-pointer">✅ Daftarkan Akun Sekarang</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 3: REGISTRASI BERHASIL & LANGSUNG MASUK RUANG BELAJAR -->
+  <div id="success-register-modal" class="hidden fixed inset-0 z-[210] bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 no-print">
+    <div class="bg-white border border-slate-200 rounded-3xl max-w-md w-full p-6 shadow-2xl text-center space-y-4 fade-in">
+      <div class="w-14 h-14 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-700 flex items-center justify-center mx-auto text-2xl font-extrabold">🎉</div>
+      <div class="space-y-1">
+        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-50 text-emerald-800 border border-emerald-200">PENDAFTARAN BERHASIL</span>
+        <h3 class="text-lg font-extrabold text-slate-900">Akun Calon Pengantin Telah Aktif!</h3>
+        <p id="teks-ringkasan-akun-baru" class="text-xs text-slate-600 leading-relaxed"></p>
+      </div>
+      <div class="flex flex-col gap-2 pt-2">
+        <button onclick="masukOtomatisSetelahDaftar()" class="w-full py-3 px-4 rounded-2xl text-xs font-extrabold bg-emerald-700 hover:bg-emerald-800 text-white shadow-sm cursor-pointer">🚀 Langsung Masuk ke Ruang Belajar</button>
+        <button onclick="salinKredensialPendaftaranBaru()" class="w-full py-2.5 px-4 rounded-xl text-xs font-extrabold bg-slate-100 hover:bg-slate-200 text-slate-800 cursor-pointer">📋 Salin Username & Nomor Registrasi</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 4: BUAT & HUBUNGKAN AKUN PASANGAN OTOMATIS -->
+  <div id="modal-buat-pasangan-otomatis" class="hidden fixed inset-0 z-[205] bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto no-print">
+    <div class="bg-white border border-slate-200 rounded-3xl max-w-2xl w-full my-8 overflow-hidden shadow-2xl fade-in">
+      <div class="bg-slate-50 border-b border-slate-200 px-6 py-4 flex items-center justify-between">
+        <div>
+          <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-700">Sinkronisasi Pasangan 2 Arah</span>
+          <h3 class="text-base font-extrabold text-slate-900">Buat & Hubungkan Akun Pasangan Otomatis</h3>
+        </div>
+        <button onclick="tutupModalBuatPasanganOtomatis()" class="w-8 h-8 rounded-xl bg-white border border-slate-200 text-slate-500 hover:text-slate-800 font-bold cursor-pointer">✕</button>
+      </div>
+      <form onsubmit="simpanAkunPasanganOtomatis(event)" class="p-6 space-y-4 text-xs max-h-[80vh] overflow-y-auto">
+        <div id="err-pasangan-otomatis" class="hidden p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 font-bold"></div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div>
+            <label class="font-extrabold text-slate-700 block mb-1">Username Login Pasangan <span class="text-red-500">*</span></label>
+            <input id="auto-pas-username" type="text" required oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9_]/g,'')" placeholder="contoh: siti_zahra" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+          </div>
+          <div>
+            <label class="font-extrabold text-slate-700 block mb-1">Kata Sandi Pasangan <span class="text-red-500">*</span></label>
+            <input id="auto-pas-password" type="password" required autocomplete="new-password" value="samawa123" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+          </div>
+          <div>
+            <label class="font-extrabold text-slate-700 block mb-1">Nama Lengkap Pasangan <span class="text-red-500">*</span></label>
+            <input id="auto-pas-nama" type="text" required placeholder="Nama Lengkap Pasangan..." class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+          </div>
+          <div>
+            <label class="font-extrabold text-slate-700 block mb-1">NIK KTP Pasangan (16 Digit) <span class="text-red-500">*</span></label>
+            <input id="auto-pas-nik" type="text" required maxlength="16" placeholder="16 Digit NIK Pasangan..." class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-mono font-bold" />
+          </div>
+          <div>
+            <label class="font-extrabold text-slate-700 block mb-1">Tempat, Tanggal Lahir Pasangan <span class="text-red-500">*</span></label>
+            <input id="auto-pas-ttl" type="text" required oninput="sinkronUsiaDariInputTTL('auto-pas-ttl','auto-pas-usia')" placeholder="Contoh: Jepara, 20 Juni 2000" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+          </div>
+          <div>
+            <label class="font-extrabold text-slate-700 block mb-1">Usia Pasangan (Tahun) <span class="text-red-500">*</span></label>
+            <input id="auto-pas-usia" type="number" min="16" max="95" required class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+          </div>
+          <div>
+            <label class="font-extrabold text-slate-700 block mb-1">Nomor WhatsApp Pasangan <span class="text-red-500">*</span></label>
+            <input id="auto-pas-wa" type="text" required placeholder="0812xxxxxxxx" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+          </div>
+          <div>
+            <label class="font-extrabold text-slate-700 block mb-1">Pendidikan Pasangan</label>
+            <select id="auto-pas-pendidikan" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold">
+              <option value="SMA/SMK/MA">SMA / SMK / MA</option>
+              <option value="S1">Sarjana (S1)</option>
+              <option value="D3/D4">Diploma (D3 / D4)</option>
+              <option value="SMP/MTs">SMP / MTs</option>
+              <option value="SD/MI">SD / MI</option>
+              <option value="S2/S3">Pascasarjana (S2 / S3)</option>
+            </select>
+          </div>
+          <div>
+            <label class="font-extrabold text-slate-700 block mb-1">Pekerjaan Pasangan</label>
+            <input id="auto-pas-pekerjaan" type="text" value="Wiraswasta / Karyawan" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+          </div>
+          <div>
+            <label class="font-extrabold text-slate-700 block mb-1">Provinsi KUA</label>
+            <select id="auto-pas-provinsi" onchange="sinkronDropdownKabupatenForm('auto-pas-provinsi','auto-pas-kabupaten','auto-pas-kua')" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold"></select>
+          </div>
+          <div>
+            <label class="font-extrabold text-slate-700 block mb-1">Kabupaten / Kota KUA</label>
+            <select id="auto-pas-kabupaten" onchange="sinkronDropdownKuaForm('auto-pas-kabupaten','auto-pas-kua')" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold"></select>
+          </div>
+          <div>
+            <label class="font-extrabold text-slate-700 block mb-1">Unit KUA Kecamatan</label>
+            <select id="auto-pas-kua" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold"></select>
+          </div>
+        </div>
+        <div class="flex justify-end gap-2 pt-3 border-t border-slate-200">
+          <button type="button" onclick="tutupModalBuatPasanganOtomatis()" class="px-4 py-2.5 rounded-xl font-bold bg-slate-100 text-slate-700 cursor-pointer">Batal</button>
+          <button type="submit" class="px-5 py-2.5 rounded-xl font-extrabold bg-emerald-700 hover:bg-emerald-800 text-white cursor-pointer">🔗 Buat & Hubungkan Pasangan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 5: PEMBACA MATERI MODUL PDF & NARASI SUARA (TTS BAHASA INDONESIA) -->
+  <div id="materi-modal" class="hidden fixed inset-0 z-[210] bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 no-print">
+    <div class="bg-white border border-slate-200 rounded-3xl max-w-4xl w-full overflow-hidden shadow-2xl fade-in">
+      <div class="bg-slate-50 border-b border-slate-200 px-6 py-4 flex items-center justify-between">
+        <div>
+          <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-700">Bahan Ajar Kurikulum Bimwin Kemenag RI</span>
+          <h3 id="judul-materi-modal" class="text-base font-extrabold text-slate-900">Materi Pembelajaran</h3>
+        </div>
+        <button onclick="tutupMateri()" class="w-8 h-8 rounded-xl bg-white border border-slate-200 text-slate-500 hover:text-slate-800 font-bold cursor-pointer">✕</button>
+      </div>
+      <div class="p-6 space-y-4 max-h-[80vh] overflow-y-auto text-xs">
+        <div class="flex flex-wrap items-center justify-between gap-2 bg-emerald-50/70 border border-emerald-200 rounded-2xl p-3.5">
+          <div class="flex items-center gap-2">
+            <button onclick="bacakanTeksMateriAktif()" class="px-3.5 py-2 rounded-xl font-extrabold bg-emerald-700 hover:bg-emerald-800 text-white transition cursor-pointer">🔊 Dengarkan Narasi Suara (TTS)</button>
+            <button onclick="hentikanSuaraTTS()" class="px-3 py-2 rounded-xl font-bold bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 transition cursor-pointer">⏹️ Hentikan Suara</button>
+          </div>
+          <a id="link-unduh-materi-pdf" href="#" target="_blank" rel="noopener noreferrer" class="px-3.5 py-2 rounded-xl font-extrabold bg-white hover:bg-slate-50 text-emerald-800 border border-emerald-300 transition">📥 Buka Modul Lengkap (Google Drive PDF)</a>
+        </div>
+        <div id="isi-ringkasan-materi-modal" class="prose max-w-none bg-slate-50 border border-slate-200 rounded-2xl p-5 text-slate-800 leading-relaxed space-y-2 text-xs sm:text-sm"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 6: PEMUTAR VIDEO INTERAKTIF MODUL -->
+  <div id="video-modal" class="hidden fixed inset-0 z-[210] bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 no-print">
+    <div class="bg-white border border-slate-200 rounded-3xl max-w-3xl w-full overflow-hidden shadow-2xl fade-in">
+      <div class="bg-slate-50 border-b border-slate-200 px-6 py-4 flex items-center justify-between">
+        <h3 id="judul-video-modal" class="text-base font-extrabold text-slate-900">Video Pembelajaran Bimbingan Perkawinan</h3>
+        <button onclick="tutupVideo()" class="w-8 h-8 rounded-xl bg-white border border-slate-200 text-slate-500 hover:text-slate-800 font-bold cursor-pointer">✕</button>
+      </div>
+      <div class="p-5 space-y-3">
+        <div class="aspect-video w-full rounded-2xl overflow-hidden bg-slate-900 border border-slate-200">
+          <iframe id="iframe-video-modul" src="" class="w-full h-full" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 7: EVALUASI KUIS (PRETEST, 5 MODUL, POSTEST, & KUIS KECOCOKAN) -->
+  <div id="kuis-modal" class="hidden fixed inset-0 z-[215] bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 no-print">
+    <div class="bg-white border border-slate-200 rounded-3xl max-w-3xl w-full overflow-hidden shadow-2xl fade-in">
+      <div class="bg-slate-50 border-b border-slate-200 px-6 py-4 flex items-center justify-between">
+        <div>
+          <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-700">Evaluasi Pemahaman Calon Pengantin</span>
+          <h3 id="kuis-title" class="text-base font-extrabold text-slate-900">Kuis Evaluasi Modul</h3>
+        </div>
+        <button onclick="tutupKuis()" class="w-8 h-8 rounded-xl bg-white border border-slate-200 text-slate-500 hover:text-slate-800 font-bold cursor-pointer">✕</button>
+      </div>
+      <div class="p-6 max-h-[75vh] overflow-y-auto space-y-4 text-xs" id="kuis-questions"></div>
+      <div class="bg-slate-50 border-t border-slate-200 px-6 py-4 flex items-center justify-between">
+        <span class="text-[11px] font-bold text-slate-500">Pilih jawaban yang paling tepat pada seluruh nomor soal</span>
+        <button id="btn-kirim-jawaban-kuis" onclick="selesaikanKuis()" class="px-5 py-2.5 rounded-xl text-xs font-extrabold bg-emerald-700 hover:bg-emerald-800 text-white transition cursor-pointer">✅ Kumpulkan Jawaban</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 8: PANDUAN PENGGUNA 8 LANGKAH SAMAWA -->
+  <div id="panduan-modal" class="hidden fixed inset-0 z-[210] bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 no-print">
+    <div class="bg-white border border-slate-200 rounded-3xl max-w-2xl w-full overflow-hidden shadow-2xl fade-in">
+      <div class="bg-slate-50 border-b border-slate-200 px-6 py-4 flex items-center justify-between">
+        <div>
+          <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-700">Pedoman Standar Nasional (PMA No. 30/2024 & SK No. 4/2026)</span>
+          <h3 class="text-base font-extrabold text-slate-900">Panduan 8 Langkah Bimbingan Perkawinan Elektronik</h3>
+        </div>
+        <button onclick="tutupPanduan()" class="w-8 h-8 rounded-xl bg-white border border-slate-200 text-slate-500 hover:text-slate-800 font-bold cursor-pointer">✕</button>
+      </div>
+      <div class="p-6 space-y-3 max-h-[75vh] overflow-y-auto text-xs text-slate-700 leading-relaxed">
+        <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200"><strong>1. Pendaftaran & Sinkronisasi Pasangan:</strong> Calon Suami & Calon Istri mendaftar sesuai KUA Kecamatan pelaksana akad nikah (dari 5.917 KUA resmi SK Dirjen Bimas Islam No. 4 Tahun 2026) dan menautkan akun pasangan.</div>
+        <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200"><strong>2. Pretest & 5 Modul Inti MOOC:</strong> Kerjakan Pretest, pelajari 5 Modul Fondasi Keluarga Sakinah (dilengkapi fitur pembaca suara TTS Bahasa Indonesia & Video), dan lulus kuis tiap modul dengan nilai minimal 60.</div>
+        <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200"><strong>3. Postest, Piagam Kompak, & Skrining 1000 HPK:</strong> Selesaikan Postest, rumuskan komitmen bersama pasangan pada Piagam Kami Kompak, dan isi kalkulator kesehatan reproduksi/stunting 1000 HPK.</div>
+        <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200"><strong>4. Verifikasi KUA & Penerbitan 4 Dokumen:</strong> Hadiri jadwal tatap muka/daring di KUA dengan menunjukkan QR ID Card. Setelah disahkan Fasilitator KUA, unduh Sertifikat SAMAWA, Piagam Kompak, dan Rapor Portofolio Catin.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 9: SURVEI IKM & KRITIK SARAN LAYANAN KUA -->
+  <div id="modal-kritik-saran" class="hidden fixed inset-0 z-[210] bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 no-print">
+    <div class="bg-white border border-slate-200 rounded-3xl max-w-md w-full overflow-hidden shadow-2xl fade-in">
+      <div class="bg-slate-50 border-b border-slate-200 px-6 py-4 flex items-center justify-between">
+        <div>
+          <span class="text-[10px] font-extrabold uppercase tracking-wider text-amber-700">Indeks Kepuasan Masyarakat (IKM)</span>
+          <h3 class="text-base font-extrabold text-slate-900">Survei Kepuasan & Masukan Layanan KUA</h3>
+        </div>
+        <button onclick="tutupModalKritikSaran()" class="w-8 h-8 rounded-xl bg-white border border-slate-200 text-slate-500 hover:text-slate-800 font-bold cursor-pointer">✕</button>
+      </div>
+      <form onsubmit="kirimKritikSaranPublik(event)" class="p-6 space-y-3.5 text-xs">
+        <div>
+          <label class="font-extrabold text-slate-700 block mb-1">Nama Anda</label>
+          <input id="kritik-nama" type="text" required placeholder="Nama Lengkap..." class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+        </div>
+        <div>
+          <label class="font-extrabold text-slate-700 block mb-1">Unit KUA Layanan</label>
+          <select id="kritik-kua" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold"></select>
+        </div>
+        <div>
+          <label class="font-extrabold text-slate-700 block mb-1">Tingkat Kepuasan Pelayanan</label>
+          <select id="kritik-rating" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold text-amber-700">
+            <option value="5">★★★★★ (5 - Sangat Puas & Sangat Membantu)</option>
+            <option value="4">★★★★☆ (4 - Puas & Baik)</option>
+            <option value="3">★★★☆☆ (3 - Cukup Baik)</option>
+            <option value="2">★★☆☆☆ (2 - Perlu Peningkatan)</option>
+            <option value="1">★☆☆☆☆ (1 - Kurang Memuaskan)</option>
+          </select>
+        </div>
+        <div>
+          <label class="font-extrabold text-slate-700 block mb-1">Kesan, Pesan, atau Saran Perbaikan <span class="text-red-500">*</span></label>
+          <textarea id="kritik-pesan" rows="3" required maxlength="500" placeholder="Tuliskan pengalaman Anda mengikuti Bimbingan Perkawinan di KUA..." class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300"></textarea>
+        </div>
+        <button type="submit" class="w-full py-3 px-4 rounded-2xl font-extrabold bg-emerald-700 hover:bg-emerald-800 text-white cursor-pointer">⭐ Kirim Survei & Masukan</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 10: PEMULIHAN LUPA KATA SANDI MANDIRI -->
+  <div id="modal-lupa-password" class="hidden fixed inset-0 z-[215] bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 no-print">
+    <div class="bg-white border border-slate-200 rounded-3xl max-w-md w-full overflow-hidden shadow-2xl fade-in">
+      <div class="bg-slate-50 border-b border-slate-200 px-6 py-4 flex items-center justify-between">
+        <h3 class="text-base font-extrabold text-slate-900">🔑 Pemulihan Kata Sandi Mandiri</h3>
+        <button onclick="tutupModalLupaPassword()" class="w-8 h-8 rounded-xl bg-white border border-slate-200 text-slate-500 font-bold cursor-pointer">✕</button>
+      </div>
+      <form onsubmit="prosesResetPasswordMandiri(event)" class="p-6 space-y-3.5 text-xs">
+        <div id="reset-msg" class="hidden p-3 rounded-xl font-bold"></div>
+        <div>
+          <label class="font-extrabold text-slate-700 block mb-1">Username Akun Anda <span class="text-red-500">*</span></label>
+          <input id="reset-username" type="text" required placeholder="Ketik Username..." class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+        </div>
+        <div>
+          <label class="font-extrabold text-slate-700 block mb-1">Verifikasi 16 Digit NIK KTP atau Email Terdaftar <span class="text-red-500">*</span></label>
+          <input id="reset-verifikasi" type="text" required placeholder="Ketik 16 Digit NIK atau Email Anda..." class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+        </div>
+        <div>
+          <label class="font-extrabold text-slate-700 block mb-1">Kata Sandi Baru <span class="text-red-500">*</span></label>
+          <input id="reset-new-password" type="password" required autocomplete="new-password" placeholder="Minimal 4 karakter..." class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+        </div>
+        <button type="submit" class="w-full py-3 px-4 rounded-2xl font-extrabold bg-emerald-700 hover:bg-emerald-800 text-white cursor-pointer">Simpan Kata Sandi Baru</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 11: SCANNER KAMERA QR CODE PRESENSI FASILITATOR -->
+  <div id="modal-scan-qr-fasilitator" class="hidden fixed inset-0 z-[220] bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 no-print">
+    <div class="bg-white border border-slate-200 rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl fade-in">
+      <div class="bg-slate-50 border-b border-slate-200 px-6 py-4 flex items-center justify-between">
+        <div>
+          <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-700">Presensi Cepat Balai Nikah KUA</span>
+          <h3 class="text-base font-extrabold text-slate-900">📷 Pindai QR ID Card Calon Pengantin</h3>
+        </div>
+        <button onclick="tutupModalScanQRFasilitator()" class="w-8 h-8 rounded-xl bg-white border border-slate-200 text-slate-500 font-bold cursor-pointer">✕</button>
+      </div>
+      <div class="p-6 space-y-4 text-xs">
+        <div id="qr-reader-fasilitator" class="w-full rounded-2xl overflow-hidden border border-slate-300 bg-slate-100 min-h-[240px]"></div>
+        <div class="flex gap-2">
+          <input id="input-manual-qr-fasilitator" type="text" placeholder="Atau ketik Nomor Sertifikat / Username Catin..." class="flex-1 px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+          <button onclick="prosesHasilScanQRFasilitator(document.getElementById('input-manual-qr-fasilitator').value)" class="px-4 py-2.5 rounded-xl font-extrabold bg-emerald-700 text-white cursor-pointer">Verifikasi</button>
+        </div>
+        <div id="hasil-scan-qr-box" class="hidden p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-950 font-bold"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 12: EDIT BIODATA PESERTA OLEH ADMIN (ANTI AUTO-FILL HIJACKING) -->
+  <div id="edit-modal" class="hidden fixed inset-0 z-[210] bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto no-print">
+    <div class="bg-white border border-slate-200 rounded-3xl max-w-2xl w-full my-8 overflow-hidden shadow-2xl fade-in">
+      <div class="bg-slate-50 border-b border-slate-200 px-6 py-4 flex items-center justify-between">
+        <h3 class="text-base font-extrabold text-slate-900">✏️ Edit Biodata & Status Calon Pengantin</h3>
+        <button onclick="tutupModalEdit()" class="w-8 h-8 rounded-xl bg-white border border-slate-200 text-slate-500 font-bold cursor-pointer">✕</button>
+      </div>
+      <form onsubmit="simpanEditPeserta(event)" class="p-6 space-y-4 text-xs max-h-[80vh] overflow-y-auto">
+        <input id="edit-username-hidden" type="hidden" />
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div>
+            <label class="font-extrabold text-slate-700 block mb-1">Nama Lengkap <span class="text-red-500">*</span></label>
+            <input id="edit-nama" type="text" required class="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+          </div>
+          <div>
+            <label class="font-extrabold text-slate-700 block mb-1">NIK KTP / Paspor <span class="text-red-500">*</span></label>
+            <input id="edit-nik" type="text" required class="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-300 font-mono font-bold" />
+          </div>
+          <div>
+            <label class="font-extrabold text-slate-700 block mb-1">Tempat, Tanggal Lahir</label>
+            <input id="edit-ttl" type="text" oninput="sinkronUsiaDariInputTTL('edit-ttl','edit-usia')" class="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+          </div>
+          <div>
+            <label class="font-extrabold text-slate-700 block mb-1">Usia (Tahun)</label>
+            <input id="edit-usia" type="number" min="16" max="95" class="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+          </div>
+          <div>
+            <label class="font-extrabold text-slate-700 block mb-1">Jenis Kelamin</label>
+            <select id="edit-jk" class="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-300 font-bold">
+              <option value="Laki-laki">Laki-laki (Calon Suami)</option>
+              <option value="Perempuan">Perempuan (Calon Istri)</option>
+            </select>
+          </div>
+          <div>
+            <label class="font-extrabold text-slate-700 block mb-1">Nomor WhatsApp</label>
+            <input id="edit-wa" type="text" class="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+          </div>
+          <div>
+            <label class="font-extrabold text-slate-700 block mb-1">Unit KUA Kecamatan</label>
+            <select id="edit-kua" class="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-300 font-bold"></select>
+          </div>
+          <div>
+            <label class="font-extrabold text-slate-700 block mb-1">Desa / Kelurahan</label>
+            <input id="edit-desa" type="text" class="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+          </div>
+          <div>
+            <label class="font-extrabold text-slate-700 block mb-1">Rencana Tanggal Akad</label>
+            <input id="edit-tgl-akad" type="date" class="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+          </div>
+          <div>
+            <label class="font-extrabold text-slate-700 block mb-1">Reset Kata Sandi Baru (Kosongkan jika tetap)</label>
+            <input id="edit-password" type="password" autocomplete="new-password" data-lpignore="true" placeholder="Isi hanya jika ingin ganti sandi..." class="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+          </div>
+          <div class="sm:col-span-2">
+            <label class="font-extrabold text-slate-700 block mb-1">Alamat Lengkap</label>
+            <input id="edit-alamat" type="text" class="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+          </div>
+        </div>
+        <div class="flex justify-end gap-2 pt-3 border-t border-slate-200">
+          <button type="button" onclick="tutupModalEdit()" class="px-4 py-2 rounded-xl font-bold bg-slate-100 text-slate-700 cursor-pointer">Batal</button>
+          <button type="submit" class="px-5 py-2 rounded-xl font-extrabold bg-emerald-700 text-white cursor-pointer">💾 Simpan Perubahan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 13: MANAJEMEN WILAYAH, PEJABAT, & KUA KECAMATAN (SK DIRJEN NO. 4/2026) -->
+  <div id="modal-wilayah-nasional" class="hidden fixed inset-0 z-[210] bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto no-print">
+    <div class="bg-white border border-slate-200 rounded-3xl max-w-3xl w-full my-8 overflow-hidden shadow-2xl fade-in">
+      <div class="bg-slate-50 border-b border-slate-200 px-6 py-4 flex items-center justify-between">
+        <div>
+          <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-700">Konfigurasi Wilayah & Satker Kemenag (SK No. 4 Tahun 2026)</span>
+          <h3 class="text-base font-extrabold text-slate-900">🗺️ Pengaturan Wilayah Kabupaten/Kota & Daftar KUA Kecamatan</h3>
+        </div>
+        <button onclick="tutupModalMultiWilayahNasional()" class="w-8 h-8 rounded-xl bg-white border border-slate-200 text-slate-500 font-bold cursor-pointer">✕</button>
+      </div>
+      <div class="p-6 space-y-4 text-xs max-h-[80vh] overflow-y-auto">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div>
+            <label class="font-extrabold text-slate-700 block mb-1">Pilih Provinsi (38 Provinsi)</label>
+            <select id="wil-input-provinsi" onchange="sinkronKabupatenDiModalWilayah()" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold"></select>
+          </div>
+          <div>
+            <label class="font-extrabold text-slate-700 block mb-1">Pilih Kabupaten / Kota (514 Kab/Kota)</label>
+            <select id="select-ganti-kabupaten-aktif" onchange="gantiKabupatenAktifGlobal(this.value)" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold"></select>
+          </div>
+          <div>
+            <label class="font-extrabold text-slate-700 block mb-1">Nama Instansi Kankemenag (Baris Kop)</label>
+            <input id="wil-input-instansi" type="text" placeholder="KANTOR KEMENTERIAN AGAMA KABUPATEN..." class="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+          </div>
+          <div>
+            <label class="font-extrabold text-slate-700 block mb-1">Kota Tanda Tangan Sertifikat</label>
+            <input id="wil-input-ibukota" type="text" placeholder="Contoh: Jepara" class="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+          </div>
+          <div>
+            <label class="font-extrabold text-slate-700 block mb-1">Nama Kepala Kantor Kemenag Kab/Kota</label>
+            <input id="wil-input-pejabat" type="text" placeholder="Nama Lengkap & Gelar Pejabat..." class="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+          </div>
+          <div>
+            <label class="font-extrabold text-slate-700 block mb-1">NIP Pejabat Penandatangan</label>
+            <input id="wil-input-nip" type="text" placeholder="NIP. 19xxxxxxxxxxxxxx" class="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+          </div>
+        </div>
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <label class="font-extrabold text-slate-700">Daftar Unit KUA Kecamatan Resmi (Pisahkan dengan koma atau baris baru)</label>
+            <button type="button" onclick="pulihkanDaftarKuaAsliDiModalWilayah()" class="text-[11px] font-extrabold text-emerald-700 hover:underline cursor-pointer">🔄 Muat Daftar KUA Resmi SK No. 4/2026</button>
+          </div>
+          <textarea id="wil-input-kualist" rows="4" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-semibold"></textarea>
+        </div>
+        <div class="flex justify-end gap-2 pt-3 border-t border-slate-200">
+          <button onclick="tutupModalMultiWilayahNasional()" class="px-4 py-2.5 rounded-xl font-bold bg-slate-100 text-slate-700 cursor-pointer">Tutup</button>
+          <button onclick="simpanWilayahKabupatenBaruNasional()" class="px-5 py-2.5 rounded-xl font-extrabold bg-emerald-700 hover:bg-emerald-800 text-white cursor-pointer">💾 Simpan Wilayah & Sinkronkan KUA</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 14: KELOLA DESA/KELURAHAN, KREDENSIAL AKUN, FASILITATOR, & PUSH NOTIF -->
+  <div id="modal-kelola-desa-kua" class="hidden fixed inset-0 z-[210] bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 no-print">
+    <div class="bg-white border border-slate-200 rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl fade-in">
+      <div class="bg-slate-50 border-b border-slate-200 px-6 py-4 flex items-center justify-between">
+        <h3 class="text-base font-extrabold text-slate-900">🏘️ Kelola Daftar Desa / Kelurahan Wilayah Kerja KUA</h3>
+        <button onclick="tutupModalKelolaDesaKua()" class="w-8 h-8 rounded-xl bg-white border border-slate-200 text-slate-500 font-bold cursor-pointer">✕</button>
+      </div>
+      <div class="p-6 space-y-4 text-xs">
+        <p id="label-kua-aktif-modal-desa" class="font-extrabold text-emerald-800">Unit KUA Aktif</p>
+        <textarea id="textarea-daftar-desa-kua" rows="5" placeholder="Ketik nama Desa / Kelurahan dipisahkan dengan koma atau baris baru (Enter)..." class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-semibold"></textarea>
+        <div class="flex justify-end gap-2">
+          <button onclick="tutupModalKelolaDesaKua()" class="px-4 py-2 rounded-xl font-bold bg-slate-100 text-slate-700 cursor-pointer">Batal</button>
+          <button onclick="simpanDaftarDesaKuaKeCloud()" class="px-5 py-2 rounded-xl font-extrabold bg-emerald-700 text-white cursor-pointer">💾 Simpan Daftar Desa</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-kredensial-admin" class="hidden fixed inset-0 z-[210] bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto no-print">
+    <div class="bg-white border border-slate-200 rounded-3xl max-w-4xl w-full my-8 overflow-hidden shadow-2xl fade-in">
+      <div class="bg-slate-50 border-b border-slate-200 px-6 py-4 flex items-center justify-between">
+        <h3 class="text-base font-extrabold text-slate-900">🔑 Manajemen Kredensial Akun Admin Wilayah & KUA</h3>
+        <button onclick="document.getElementById('modal-kredensial-admin').classList.add('hidden')" class="w-8 h-8 rounded-xl bg-white border border-slate-200 text-slate-500 font-bold cursor-pointer">✕</button>
+      </div>
+      <div class="p-6 space-y-4 text-xs max-h-[80vh] overflow-y-auto">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <input id="cari-akun-admin-input" type="text" oninput="filterTabelAkunAdmin()" placeholder="Cari Unit KUA / Username / Kepala KUA..." class="px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-300 font-semibold w-64" />
+          <button onclick="salinSemuaKredensialKUA()" class="px-4 py-2 rounded-xl font-extrabold bg-emerald-700 text-white cursor-pointer">📋 Salin Semua Kredensial</button>
+        </div>
+        <div class="overflow-x-auto border border-slate-200 rounded-2xl">
+          <table class="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr class="bg-slate-100 text-slate-700 border-b border-slate-200 font-extrabold">
+                <th class="p-3">Wilayah / Unit Kerja</th>
+                <th class="p-3">Username Login</th>
+                <th class="p-3">Kepala KUA / Pejabat</th>
+                <th class="p-3 text-center">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-daftar-akun-admin" class="divide-y divide-slate-200"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 15: MANAJEMEN FASILITATOR, EDITOR LMS, PEJABAT SERTIFIKAT, & BACKUP DB -->
+  <div id="modal-manajemen-fasilitator" class="hidden fixed inset-0 z-[210] bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto no-print">
+    <div class="bg-white border border-slate-200 rounded-3xl max-w-4xl w-full my-8 overflow-hidden shadow-2xl fade-in">
+      <div class="bg-slate-50 border-b border-slate-200 px-6 py-4 flex items-center justify-between">
+        <h3 class="text-base font-extrabold text-slate-900">👥 Manajemen Akun Fasilitator Bimbingan Perkawinan KUA</h3>
+        <button onclick="tutupModalManajemenFasilitator()" class="w-8 h-8 rounded-xl bg-white border border-slate-200 text-slate-500 font-bold cursor-pointer">✕</button>
+      </div>
+      <div class="p-6 space-y-4 text-xs max-h-[80vh] overflow-y-auto">
+        <form onsubmit="simpanAkunFasilitatorBaru(event)" class="bg-slate-50 border border-slate-200 rounded-2xl p-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <input id="fas-new-nama" type="text" required placeholder="Nama Lengkap & Gelar Fasilitator..." class="px-3 py-2 rounded-xl bg-white border border-slate-300 font-bold" />
+          <input id="fas-new-nip" type="text" placeholder="NIP / Nomor SK Fasilitator..." class="px-3 py-2 rounded-xl bg-white border border-slate-300 font-bold" />
+          <select id="fas-new-kua" class="px-3 py-2 rounded-xl bg-white border border-slate-300 font-bold"></select>
+          <input id="fas-new-username" type="text" required oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9_]/g,'')" placeholder="Username Login Fasilitator..." class="px-3 py-2 rounded-xl bg-white border border-slate-300 font-bold" />
+          <input id="fas-new-password" type="password" required autocomplete="new-password" value="fasilitator123" placeholder="Kata Sandi..." class="px-3 py-2 rounded-xl bg-white border border-slate-300 font-bold" />
+          <button type="submit" class="px-4 py-2 rounded-xl font-extrabold bg-emerald-700 text-white cursor-pointer">➕ Tambah / Update Fasilitator</button>
+        </form>
+        <div class="overflow-x-auto border border-slate-200 rounded-2xl">
+          <table class="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr class="bg-slate-100 text-slate-700 border-b border-slate-200 font-extrabold">
+                <th class="p-3">Nama Fasilitator & NIP</th>
+                <th class="p-3">Unit KUA</th>
+                <th class="p-3">Username</th>
+                <th class="p-3 text-center">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-manajemen-fasilitator" class="divide-y divide-slate-200"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL PROFIL FASILITATOR, PUSH PENGINGAT APK, EDITOR LMS, PENGATURAN PEJABAT, & BACKUP -->
+  <div id="modal-profil-fasilitator" class="hidden fixed inset-0 z-[210] bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 no-print">
+    <div class="bg-white border border-slate-200 rounded-3xl max-w-md w-full overflow-hidden shadow-2xl fade-in">
+      <div class="bg-slate-50 border-b border-slate-200 px-6 py-4 flex items-center justify-between">
+        <h3 class="text-base font-extrabold text-slate-900">👨‍🏫 Profil & SK Resmi Fasilitator KUA</h3>
+        <button onclick="tutupModalProfilFasilitator()" class="w-8 h-8 rounded-xl bg-white border border-slate-200 text-slate-500 font-bold cursor-pointer">✕</button>
+      </div>
+      <form onsubmit="simpanProfilFasilitatorMandiri(event)" class="p-6 space-y-3.5 text-xs">
+        <input id="fas-profil-nama" type="text" required placeholder="Nama Lengkap & Gelar..." class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+        <input id="fas-profil-nip" type="text" placeholder="NIP. 19xxxxxxxxxxxxxx" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+        <input id="fas-profil-jabatan" type="text" placeholder="Jabatan (Contoh: Penghulu Ahli Muda / Penyuluh Agama)" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+        <input id="fas-profil-wa" type="text" placeholder="Nomor WhatsApp..." class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+        <button type="submit" class="w-full py-3 rounded-2xl font-extrabold bg-emerald-700 text-white cursor-pointer">💾 Simpan Profil Fasilitator</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="modal-remember-apk" class="hidden fixed inset-0 z-[210] bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 no-print">
+    <div class="bg-white border border-slate-200 rounded-3xl max-w-md w-full overflow-hidden shadow-2xl fade-in">
+      <div class="bg-slate-50 border-b border-slate-200 px-6 py-4 flex items-center justify-between">
+        <h3 class="text-base font-extrabold text-slate-900">📲 Push Pengingat ke Layar HP Calon Pengantin</h3>
+        <button onclick="tutupModalRememberAPKAdmin()" class="w-8 h-8 rounded-xl bg-white border border-slate-200 text-slate-500 font-bold cursor-pointer">✕</button>
+      </div>
+      <div class="p-6 space-y-3.5 text-xs">
+        <select id="push-apk-target-kua" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold"></select>
+        <input id="push-apk-judul" type="text" value="Panggilan Sesi Bimbingan Perkawinan KUA" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+        <textarea id="push-apk-pesan" rows="3" placeholder="Ketik pesan pengingat jadwal kelas atau kelengkapan modul untuk Catin..." class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300"></textarea>
+        <button onclick="kirimPushNotifikasiAPK()" class="w-full py-3 rounded-2xl font-extrabold bg-emerald-700 text-white cursor-pointer">🚀 Kirim Pengingat Sekarang</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-kelola-lms" class="hidden fixed inset-0 z-[210] bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto no-print">
+    <div class="bg-white border border-slate-200 rounded-3xl max-w-3xl w-full my-8 overflow-hidden shadow-2xl fade-in">
+      <div class="bg-slate-50 border-b border-slate-200 px-6 py-4 flex items-center justify-between">
+        <h3 class="text-base font-extrabold text-slate-900">📚 Editor Kurikulum 5 Modul & Evaluasi Kuis LMS</h3>
+        <button onclick="tutupModalKelolaLMS()" class="w-8 h-8 rounded-xl bg-white border border-slate-200 text-slate-500 font-bold cursor-pointer">✕</button>
+      </div>
+      <div class="p-6 space-y-4 text-xs max-h-[80vh] overflow-y-auto">
+        <select id="lms-select-modul" onchange="muatDataModulKeEditorLMS(this.value)" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 font-extrabold">
+          <option value="1">Modul 1: Mempersiapkan Keluarga Sakinah</option>
+          <option value="2">Modul 2: Mengelola Psikologi & Dinamika Perkawinan</option>
+          <option value="3">Modul 3: Mengelola Keuangan & Kebutuhan Keluarga</option>
+          <option value="4">Modul 4: Menjaga Kesehatan Reproduksi & 1000 HPK</option>
+          <option value="5">Modul 5: Mempersiapkan Generasi Berkualitas</option>
+        </select>
+        <input id="lms-judul" type="text" placeholder="Judul Modul..." class="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <input id="lms-pdf" type="url" placeholder="Link Google Drive PDF Modul..." class="px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+          <input id="lms-video" type="url" placeholder="Link YouTube Video Pembelajaran..." class="px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+        </div>
+        <textarea id="lms-ringkasan" rows="4" placeholder="Ringkasan Materi untuk Pembaca Suara (TTS)..." class="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-300"></textarea>
+        <div class="flex justify-end gap-2">
+          <button onclick="simpanPerubahanModulLMS()" class="px-5 py-2.5 rounded-xl font-extrabold bg-emerald-700 text-white cursor-pointer">💾 Simpan Perubahan Modul LMS</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-pengaturan-pejabat" class="hidden fixed inset-0 z-[210] bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 no-print">
+    <div class="bg-white border border-slate-200 rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl fade-in">
+      <div class="bg-slate-50 border-b border-slate-200 px-6 py-4 flex items-center justify-between">
+        <h3 class="text-base font-extrabold text-slate-900">✒️ Pengaturan Pejabat Penandatangan, Kop, & Nomor Surat</h3>
+        <button onclick="tutupPengaturanPejabat()" class="w-8 h-8 rounded-xl bg-white border border-slate-200 text-slate-500 font-bold cursor-pointer">✕</button>
+      </div>
+      <form onsubmit="simpanPengaturanPejabat(event)" class="p-6 space-y-3.5 text-xs">
+        <div>
+          <label class="font-extrabold text-slate-700 block mb-1">Jabatan Penandatangan (Definitif / Plt. / Plh.)</label>
+          <input id="set-jabatan-pejabat" type="text" value="Kepala Kantor Kementerian Agama" class="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+        </div>
+        <div>
+          <label class="font-extrabold text-slate-700 block mb-1">Nama Terang & Gelar Pejabat Penandatangan Sertifikat</label>
+          <input id="set-nama-pejabat" type="text" required class="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+        </div>
+        <div>
+          <label class="font-extrabold text-slate-700 block mb-1">NIP Pejabat</label>
+          <input id="set-nip-pejabat" type="text" required class="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+        </div>
+        <div>
+          <label class="font-extrabold text-slate-700 block mb-1">Nomor Agenda Surat Keluar Laporan (PW.01)</label>
+          <input id="set-nomor-surat-agenda" type="text" placeholder="Contoh: B-01/Kua.11.20/PW.01/11/2026" class="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-300 font-bold" />
+        </div>
+        <button type="submit" class="w-full py-3 rounded-2xl font-extrabold bg-emerald-700 text-white cursor-pointer">💾 Simpan Pengaturan Pejabat</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="modal-backup-db" class="hidden fixed inset-0 z-[210] bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 no-print">
+    <div class="bg-white border border-slate-200 rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl fade-in">
+      <div class="bg-slate-50 border-b border-slate-200 px-6 py-4 flex items-center justify-between">
+        <h3 class="text-base font-extrabold text-slate-900">💾 Backup & Restore Database Nasional (Chunked Batch)</h3>
+        <button onclick="tutupModalBackupDatabase()" class="w-8 h-8 rounded-xl bg-white border border-slate-200 text-slate-500 font-bold cursor-pointer">✕</button>
+      </div>
+      <div class="p-6 space-y-4 text-xs">
+        <div class="grid grid-cols-2 gap-3">
+          <button onclick="eksporDatabaseCadangan('json')" class="p-4 rounded-2xl bg-emerald-50 hover:bg-emerald-100 text-emerald-950 border border-emerald-300 font-extrabold text-center cursor-pointer">📦 Unduh Full Backup (.JSON)</button>
+          <button onclick="eksporDatabaseCadangan('csv')" class="p-4 rounded-2xl bg-sky-50 hover:bg-sky-100 text-sky-950 border border-sky-300 font-extrabold text-center cursor-pointer">📊 Unduh Tabel Peserta (.CSV UTF-8)</button>
+        </div>
+        <div class="pt-3 border-t border-slate-200 space-y-2">
+          <label class="font-extrabold text-slate-700 block">Pulihkan (Restore) Database dari File Backup JSON:</label>
+          <input id="input-file-restore-json" type="file" accept=".json" class="w-full text-xs text-slate-600" />
+          <button onclick="restoreDatabaseDariJSON()" class="w-full py-2.5 rounded-xl font-extrabold bg-slate-800 hover:bg-slate-900 text-white cursor-pointer">🔄 Jalankan Restore Database Aman</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       12. 6 KONTAINER CETAK PDF RESMI (A4 LANDSCAPE & A4 PORTRAIT PRESISI TINGGI)
+       ======================================================================== -->
+  <div class="offscreen-pdf-stage">
+
+    <!-- DOKUMEN 1: SERTIFIKAT KELULUSAN SAMAWA (A4 LANDSCAPE 297mm x 210mm) -->
+    <div id="area-sertifikat-cetak" style="width: 297mm; height: 210mm; padding: 10mm; background: #ffffff; color: #0f172a; font-family: 'Plus Jakarta Sans', sans-serif; box-sizing: border-box;">
+      <div style="width: 100%; height: 100%; border: 3px double #047857; border-radius: 12px; padding: 10mm 14mm; position: relative; display: flex; flex-direction: column; justify-content: space-between; background: #ffffff;">
+        <!-- Kop Sertifikat Kemenag RI -->
+        <div style="display: flex; align-items: center; justify-content: center; gap: 16px; border-bottom: 2px solid #047857; padding-bottom: 10px;">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Kementerian_Agama_new_logo.png/300px-Kementerian_Agama_new_logo.png" alt="Logo Kemenag" style="width: 58px; height: 58px; object-fit: contain;" />
+          <div style="text-align: center;">
+            <div style="font-size: 13px; font-weight: 800; letter-spacing: 1px; color: #065f46;">KEMENTERIAN AGAMA REPUBLIK INDONESIA</div>
+            <div id="sertif-kop-instansi" style="font-size: 15px; font-weight: 800; color: #0f172a;">DIREKTORAT JENDERAL BIMBINGAN MASYARAKAT ISLAM</div>
+            <div id="sertif-kop-alamat" style="font-size: 10px; font-weight: 600; color: #475569;">Layanan Bimbingan Perkawinan Calon Pengantin Nasional — Berdasarkan PMA Nomor 30 Tahun 2024 & SK Dirjen Bimas Islam Nomor 4 Tahun 2026</div>
+          </div>
+        </div>
+
+        <!-- Isi Utama Sertifikat -->
+        <div style="text-align: center; margin: 6px 0;">
+          <div style="font-family: 'Cinzel', serif; font-size: 26px; font-weight: 800; color: #065f46; letter-spacing: 2px;">SERTIFIKAT BIMBINGAN PERKAWINAN</div>
+          <div id="sertif-nomor-reg" style="font-size: 11px; font-weight: 800; color: #334155; margin-top: 2px;">Nomor Registrasi: SAMAWA-NASIONAL</div>
+          <div style="font-size: 11px; color: #475569; margin-top: 8px;">Direktorat Jenderal Bimbingan Masyarakat Islam Kementerian Agama Republik Indonesia menerangkan bahwa:</div>
+          <div id="sertif-nama" style="font-size: 22px; font-weight: 800; color: #0f172a; margin-top: 6px; text-decoration: underline;">NAMA CALON PENGANTIN</div>
+          <div id="sertif-ttl" style="font-size: 11px; font-weight: 700; color: #334155; margin-top: 4px;">Tempat, Tanggal Lahir: - • NIK: -</div>
+          <div id="sertif-pasangan-baris" style="font-size: 11px; font-weight: 700; color: #065f46; margin-top: 3px;">Calon Pasangan: - • Unit Pelaksana: KUA Kecamatan</div>
+          <div style="font-size: 11px; color: #334155; max-width: 85%; margin: 8px auto 0; line-height: 1.5;">
+            Telah mengikuti dan dinyatakan <strong>LULUS</strong> seluruh rangkaian Bimbingan Perkawinan Elektronik Calon Pengantin (SAMAWA) meliputi 5 Modul Inti Fondasi Keluarga Sakinah, Psikologi Perkawinan, Manajemen Keuangan, Kesehatan Reproduksi & Pencegahan Stunting 1000 HPK, serta Evaluasi Terpadu dengan predikat <strong id="sertif-predikat">SANGAT MEMUASKAN</strong> (Skor Rata-Rata: <strong id="sertif-nilai">100</strong>).
+          </div>
+        </div>
+
+        <!-- Baris Bawah: Pasfoto, QR Code Validasi, & Tanda Tangan Pejabat -->
+        <div style="display: flex; align-items: flex-end; justify-content: space-between; margin-top: 6px;">
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <img id="sertif-foto" src="https://ui-avatars.com/api/?name=Catin&background=ecfdf5&color=065f46&bold=true" alt="Foto" style="width: 68px; height: 84px; object-fit: cover; border: 2px solid #047857; border-radius: 6px;" />
+            <div>
+              <div id="sertif-qrcode" style="padding: 4px; border: 1px solid #cbd5e1; border-radius: 6px; background: #ffffff; display: inline-block;"></div>
+              <div style="font-size: 8px; font-weight: 700; color: #64748b; margin-top: 2px;">Pindai QR untuk Validasi Keaslian</div>
+            </div>
+          </div>
+
+          <div style="text-align: center; min-width: 240px;">
+            <div id="sertif-kota-tanggal" style="font-size: 11px; font-weight: 700; color: #334155;">Jakarta, 16 November 2026</div>
+            <div id="sertif-jabatan-pejabat" style="font-size: 11px; font-weight: 800; color: #0f172a; margin-top: 2px;">Kepala Kantor Kementerian Agama</div>
+            <div style="height: 44px; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; color: #047857;">[ Ditandatangani Secara Elektronik ]</div>
+            <div id="sertif-nama-pejabat" style="font-size: 12px; font-weight: 800; color: #0f172a; text-decoration: underline;">Nama Pejabat Penandatangan</div>
+            <div id="sertif-nip-pejabat" style="font-size: 10px; font-weight: 700; color: #475569;">NIP. -</div>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <!-- BANNER INDIKATOR PROSES CETAK DOKUMEN PDF -->
-    <div id="banner-loading-pdf" class="fixed inset-0 bg-slate-900/70 z-[95] hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl p-6 max-w-sm w-full text-center space-y-3 shadow-2xl border border-emerald-200">
-            <div class="w-12 h-12 mx-auto rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center text-xl">
-                <i class="fas fa-spinner fa-spin"></i>
-            </div>
-            <h4 class="font-extrabold text-sm text-emerald-950">Menyiapkan Dokumen Resmi PDF...</h4>
-            <p class="text-xs text-slate-500">Mohon tunggu sejenak, sistem sedang merender tanda tangan QR Code dan tata naskah dinas resolusi tinggi.</p>
-        </div>
-    </div>
+    <!-- DOKUMEN 2: PIAGAM KESEPAKATAN PASANGAN "KAMI KOMPAK" (A4 PORTRAIT) -->
+    <div id="container-cetak-kompak" style="width: 210mm; min-height: 296mm; padding: 14mm; background: #ffffff; color: #0f172a; font-family: 'Plus Jakarta Sans', sans-serif; box-sizing: border-box;"></div>
 
+    <!-- DOKUMEN 3: RAPOR PORTOFOLIO KELULUSAN CATIN (A4 PORTRAIT) -->
+    <div id="container-cetak-portofolio" style="width: 210mm; min-height: 296mm; padding: 14mm; background: #ffffff; color: #0f172a; font-family: 'Plus Jakarta Sans', sans-serif; box-sizing: border-box;"></div>
+
+    <!-- DOKUMEN 4: DAFTAR HADIR KELAS BIMWIN KUA (A4 PORTRAIT) -->
+    <div id="container-cetak-absen-offline" style="width: 210mm; min-height: 296mm; padding: 14mm; background: #ffffff; color: #0f172a; font-family: 'Plus Jakarta Sans', sans-serif; box-sizing: border-box;"></div>
+
+    <!-- DOKUMEN 5: LAPORAN REKAPITULASI EKSEKUTIF DINAS (A4 LANDSCAPE) -->
+    <div id="pdf-export-container" style="width: 297mm; min-height: 209mm; padding: 12mm; background: #ffffff; color: #0f172a; font-family: 'Plus Jakarta Sans', sans-serif; box-sizing: border-box;"></div>
+
+  </div>
+    
     <!-- TOAST NOTIFIKASI MODERN & TOAST PUSH PENGINGAT APK -->
     <div id="toast-notifikasi-modern" class="fixed bottom-16 lg:bottom-6 right-4 left-4 sm:left-auto sm:w-96 bg-slate-900 text-white p-4 rounded-2xl shadow-2xl border-l-4 border-emerald-400 z-[80] hidden">
         <div class="flex items-start gap-3">
